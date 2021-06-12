@@ -8,8 +8,7 @@ class MarketPlace extends CI_Controller
     }
     function index()
     {
-        // $data['tweets'] = $this->Twitter_model->get_all_tweets();
-        // $data['_view'] = 'twitter/index';
-        // $this->load->view('layouts/main', $data);
+        $data['_view'] = 'marketPlace/index';
+        $this->load->view('layouts/main', $data);
     }
 }
