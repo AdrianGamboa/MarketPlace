@@ -8,7 +8,7 @@ class MarketPlace extends CI_Controller
     }
     function index()
     {
-        $data['_view'] = 'marketPlace/index';
+        $data['_view'] = 'marketPlace/producto';
         $this->load->view('layouts/main', $data);
     }
 }
