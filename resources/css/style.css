@@ -2,7 +2,7 @@
 {
 	margin: 0px; /* Comentario en CSS*/
 	padding: 0px; /* Los margenes son reducidos a 0*/
-	overflow: hidden; /*Ocultamos el Scroll de la pagina*/
+	 /*Ocultamos el Scroll de la pagina*/
 	font-family: Segoe UI, Century Gothic,Verdana, Arial;
 	background: #F5F8FA;
 }
@@ -44,7 +44,7 @@ a, img{
     justify-content: center;
 }
 .busqueda{
-
+	min-width: max-content;
 	display: flex;
 	align-items: center !important; 
 	justify-content: center;
@@ -75,7 +75,7 @@ a, img{
 .product_box{
 
 	border-top:#19284C 4px solid ;
-	border-bottom:#19284C 4px solid ;
+	
 }
 .lbl_user{
 	color: white;
