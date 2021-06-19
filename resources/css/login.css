@@ -4,7 +4,7 @@ html, body
 	padding: 0px; /* Los margenes son reducidos a 0*/
 	overflow: hidden; /*Ocultamos el Scroll de la pagina*/
 	font-family: Segoe UI, Century Gothic,Verdana, Arial;
-	background: #F5F8FA;
+	background: #15202B;
 }
 
 #form_container{
@@ -16,26 +16,27 @@ html, body
 	width: 350px;
 	height: 200px;
 	margin: 150px auto;
-	border: 1px solid #3AB0B0;
-	border-top: 20px solid #3AB0B0;
+	border: 1px solid #1DA1F2;
+	border-top: 20px solid #1DA1F2;
 	border-radius: 8px;
 	overflow: hidden;
 	padding: 20px 10px 10px 10px;
-	background: #FFF;
+	background: #253341;
 }
 
 .cajatexto{
 	padding: 5px;
 	margin: 10px;
 	border-radius: 5px;
-	border: 1px solid #3AB0B0;
+	border: 1px solid #1DA1F2;
 	width: 300px;
-	color: #555;
+	color: #FFF;
+	background: #15202B;
 }
 
 #btn_login{
 	border-radius: 80px;
-	background: #3AB0B0;
+	background: #1DA1F2;
 	color: #FFF;
 	position: relative;
 	border: 0px;
@@ -46,12 +47,12 @@ html, body
 }
 
 #btn_login:hover{
-	background: #008E8E;
+	background: #1A91DA;
 	cursor: pointer;
 }
 
 #btn_login:active{
-	background: #009999;
+	background: #184D71;
 }
 
 .login_msg_box{
@@ -62,9 +63,29 @@ html, body
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	color: #FFFFFF;
-	/*text-shadow: 2px 2px 2px #000;*/
 	font-weight: bold;
 	text-align: center;
+}
+.boton {
+	border: 0px;
+    background: #1DA1F2;
+    color: #FFF;
+    height: 34px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#atras{
+	text-align: right;
+}
+
+#actions a {
+	font-size: 16px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+#btn_adduser {
+	color: #1F8DB1;
 }
 
 .error{
