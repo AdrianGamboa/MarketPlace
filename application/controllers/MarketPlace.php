@@ -7,124 +7,244 @@ class MarketPlace extends CI_Controller
         $this->load->model('MarketPlace_model');
         $this->load->library('session');
     }
-    function index($tiendas_data = array())
+    function index($tiendas_data = array(),$productos_data = array())
     {
         if($tiendas_data == null){ 
             $data['tiendas'] = $this->MarketPlace_model->get_all_tiendas(); 
+
+            $params = array(     //*           
+                'idUsuarios' => 1,//*
+            );//*
+
+            $data['productos'] = $this->MarketPlace_model->buscar_productos_tienda($params); //get productos destacados            
         } else { 
             $data['tiendas'] = $tiendas_data; 
+            $data['productos'] = $productos_data;             
         }
 
+        $data['fotos'] = $this->MarketPlace_model->get_all_fotos_productos(); 
         $data['categorias'] = $this->MarketPlace_model->get_all_categorias();
 
         $data['_view'] = 'marketPlace/index';
-
         $this->load->view('layouts/main', $data);
     }
-
-    function tienda($users_id)
+    
+    function carrito($usuario_id)
     {   
-        //Se envian datos al view de tienda.
+        //Se envian datos al view de carritp.
+        $data['productos_carrito'] = $this->MarketPlace_model->get_carrito($usuario_id); 
+        $data['productos_deseos'] = $this->MarketPlace_model->get_deseos($usuario_id); 
         $data['categorias'] = $this->MarketPlace_model->get_all_categorias(); 
-        $data['productos'] = $this->MarketPlace_model->get_productos_tienda($users_id); 
-        $data['tienda'] = $this->MarketPlace_model->get_datos_tienda($users_id); 
-        $data['redes'] = $this->MarketPlace_model->get_redes_tienda($users_id); 
-        $data['fotos'] = $this->MarketPlace_model->get_all_fotos_productos(); 
+        $data['fotos'] = $this->MarketPlace_model->get_all_fotos_productos();
 
 
-        $data['_view'] = 'marketPlace/tienda';
+        $data['_view'] = 'marketPlace/carrito';
         $this->load->view('layouts/main',$data);
     }
-    function producto($producto_id)
-    {   
-        //Se envian datos al view de producto.
-        $data['producto'] = $this->MarketPlace_model->get_datos_producto($producto_id); 
-        $data['categorias'] = $this->MarketPlace_model->get_all_categorias(); 
-        $data['fotos'] = $this->MarketPlace_model->get_fotos_producto($producto_id);
+    //Realiza la busqueda en la pagina principal, tomando en cuenta el tipo(producto, tienda), las diferentes categorías que existen y el parametro de busqueda que proporciona el usuario
+    function buscar(){        
 
+        if($this->input->post('txt_tipo') != null && $this->input->post('txt_tipo') == "Tiendas") { //Si quiere buscar tienda
+            if($this->input->post('txt_categoria') != '0') //Si quiere buscar una tienda por categoria
+            {
+                $categoria = $this->MarketPlace_model->get_categoria($this->input->post('txt_categoria')); 
 
-        $data['_view'] = 'marketPlace/producto';
-        $this->load->view('layouts/main',$data);
-    }
-    function addProduct($tienda_id){
-        
-        $this->load->library('form_validation');
-        $this->load->helper('date');
+                $tiendas = $this->MarketPlace_model->buscar_tiendas_categoria($this->input->post('txt_buscar'), $categoria);
+                if($tiendas != null) {
+                    $productos = array();
 
-        $this->form_validation->set_rules('txt_nombre','Nombre','required|max_length[128]');
-        $this->form_validation->set_rules('txt_descripcion','Descripcion','required|max_length[128]');
-        $this->form_validation->set_rules('txt_disponibles','Disponibles','required');
-        $this->form_validation->set_rules('txt_ubicacion','Ubicacion','required|max_length[128]');
-        $this->form_validation->set_rules('txt_precio','Precio','required');
-        $this->form_validation->set_rules('txt_tiempo_envio','Tiempo de envio','required');
-        $this->form_validation->set_rules('txt_costo_envio','Costo de envio','required');
+                    foreach($tiendas as $r){
+                        $productos = array_merge($productos,$this->MarketPlace_model->buscar_productos_tienda_categoria($r,$categoria));
+                    }
+
+                    $productos = array_unique($productos,SORT_REGULAR);
+                    $this->index($tiendas,$productos);  
+                }
+                else {
+                    $this->session->set_flashdata('error', "No se encontraron tiendas.");
+                    redirect('marketPlace/buscar','refresh');
+                    $this->index();    
+                }               
+            }
+            else {
+                if($this->input->post('txt_buscar') != null) {
+                    $tiendas = $this->MarketPlace_model->buscar_tiendas($this->input->post('txt_buscar'));
+                    if($tiendas != null){
+                        $productos = array();
+
+                        foreach($tiendas as $r){
+                            $productos =  array_merge($productos,$this->MarketPlace_model->buscar_productos_tienda($r));
+                        }
+                        $this->index($tiendas,$productos);
+                        
+                    }
+                    else{
+                        $this->session->set_flashdata('error', "No se encontraron tiendas.");
+                        redirect('marketPlace/buscar','refresh');
+                        $this->index();    
+                        
+                    }
+                }
+                else {
+                    $this->session->set_flashdata('error', "Digite parámetros de búsqueda.");
+                    redirect('marketPlace/buscar','refresh');
+                    $this->index();    
+                } 
+            }            
+        }
+        else if ($this->input->post('txt_tipo') != null && $this->input->post('txt_tipo') == "Productos") { //Si quiere buscar productos
+            if($this->input->post('txt_categoria') != '0') //Si quiere buscar productos por categoria
+            {
+                $categoria = $this->MarketPlace_model->get_categoria($this->input->post('txt_categoria'));
+
+                $productos = $this->MarketPlace_model->buscar_productos_categoria($this->input->post('txt_buscar'), $categoria);
                 
-        if (empty($_FILES['txt_foto']['name']))
-        {
-            $this->form_validation->set_rules('txt_foto', 'Foto del producto', 'required');
+                if($productos != null) {
+                    $tiendas = array();
+
+                    foreach($productos as $r){
+                        $tiendas = array_merge($tiendas,$this->MarketPlace_model->buscar_tienda_producto_categoria($r,$categoria));
+                    }
+
+                    $tiendas = array_unique($tiendas,SORT_REGULAR);
+                    $this->index($tiendas,$productos);  
+                }
+                else {
+                    $this->session->set_flashdata('error', "No se encontraron productos.");
+                    redirect('marketPlace/buscar','refresh');
+                    $this->index();    
+                }  
+            }
+            else {
+                if($this->input->post('txt_buscar') != null) {
+                    $productos = $this->MarketPlace_model->buscar_productos($this->input->post('txt_buscar'));
+                    if($productos != null){
+                        $tiendas = array(); //Se guardan las tiendas que venden esos productos
+
+                        foreach($productos as $r){
+                            $tiendas = array_merge($tiendas,$this->MarketPlace_model->buscar_tienda_producto($r));
+                        }
+                                        
+                        $tiendas = array_unique($tiendas,SORT_REGULAR);
+
+                        $this->index($tiendas,$productos);
+                    }
+                    else{                        
+                        $this->session->set_flashdata('error', "No se encontraron productos.");
+                        redirect('marketPlace/buscar','refresh');
+                        $this->index();    
+                    }                    
+                }
+                else{
+                    $this->session->set_flashdata('error', "Digite parámetros de búsqueda.");
+                    redirect('marketPlace/buscar','refresh');
+                    $this->index();    
+                }
+            }
+        }
+        else{
+            $this->index();   
+        }  
+        
+    }
+    //Permite agregar productos al carrito del usuario
+    function agregar_carrito($product_id)
+    {        
+        $this->load->library('form_validation');        
+        $this->form_validation->set_rules('txt_cantidad','Cantidad','required');
+
+        $cant_producto = $this->MarketPlace_model->cantidad_producto($product_id);
+
+        if($cant_producto > 0) {
+            if(isset($this->session->userdata['logged_in'])) {
+            
+                $params = array(                
+                    'Productos_id' => $product_id,
+                    'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+                    'cantidad' => $this->input->post('txt_cantidad'),
+                );
+                
+                $producto_existente = $this->MarketPlace_model->verificar_producto_carrito($params);
+
+                if(isset($producto_existente)){
+                    $params2 = array(                
+                        'cantidad' => $producto_existente['cantidad'] + 1,                        
+                    );
+                    $this->MarketPlace_model->update_carrito($producto_existente['idCarritos'] , $params2);
+                } else {
+                    $this->MarketPlace_model->add_carrito($params);
+                }
+                
+                $this->session->set_flashdata('success', "Producto agregado al carrito correctamente.");
+            }
+        }
+        else{
+            $this->session->set_flashdata('success', "No hay productos disponibles para la venta.");
         }
 
-        $format = "%Y-%m-%d";
-
-        if($this->form_validation->run())     
-        {               
-            $params = array(
-				'nombre' => $this->input->post('txt_nombre'),				
-				'descripcion' => $this->input->post('txt_descripcion'),
-                'disponibles' => $this->input->post('txt_disponibles'),
-                'ubicacion' => $this->input->post('txt_ubicacion'),
-                'fecha_publicacion' =>  mdate($format),
-                'precio' => $this->input->post('txt_precio'),
-                'tiempo_envio' => $this->input->post('txt_tiempo_envio'),
-                'costo_envio' => $this->input->post('txt_costo_envio'),
-                'Usuarios_id' => $tienda_id,
+        redirect('producto/index/' . $product_id);
+    }
+    function eliminar_carrito($product_id)
+    {                  
+        if(isset($this->session->userdata['logged_in'])) {
+        
+            $params = array(                
+                'Productos_id' => $product_id,
+                'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
             );
             
-            $product_id = $this->MarketPlace_model->add_producto($params);
-            $this->upload_photo($product_id);
+            $producto_existente = $this->MarketPlace_model->verificar_producto_carrito($params);
 
-            $data['message_display'] = 'Producto agregado exitosamente.';
-            redirect('marketPlace/tienda/'.$tienda_id, 'refresh'); 
+            if(isset($producto_existente)){
+                $this->MarketPlace_model->eliminar_carrito($params);
+            }
+            
+            $this->session->set_flashdata('success', "Producto eliminado del carrito correctamente.");
         }
-        else
-        {
-            $this->tienda($tienda_id);
-        }
+
+        redirect('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']);
     }
-
-    function upload_photo($product_id)
-    {
-        $num_foto = count($this->MarketPlace_model->get_fotos_producto($product_id)) + 1;
-
-        $config['upload_path']          = './resources/photos/products/';
-        $config['allowed_types']        = 'gif|jpg|png';
-        $config['max_size']             = 2000; //2MB
-        $config['file_name']           = $product_id.$num_foto;
-        $config['overwrite']            = true;
-
-        $this->load->library('upload', $config);
-
-        if ( ! $this->upload->do_upload('txt_foto'))
-        {
-            $error = array('error' => $this->upload->display_errors());
-            $this->session->set_flashdata('error', $error['error']);
-
-        }
-        else
-        {
-            $data = array('upload_data' => $this->upload->data());
-            $params = array(
-                'nombre' => $this->upload->data('file_name'),
+    function agregar_deseo($product_id)
+    {       
+        if(isset($this->session->userdata['logged_in'])) {
+        
+            $params = array(                
                 'Productos_id' => $product_id,
+                'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+                'alerta' => 'N',
             );
+            
+            $producto_existente = $this->MarketPlace_model->verificar_producto_deseo($params);
 
-            $this->MarketPlace_model->add_foto($params);
-
-            $this->session->set_flashdata('success', "Archivo cargado al sistema exitosamente.");
+            if(!isset($producto_existente)){
+                $this->MarketPlace_model->add_deseo($params);
+            } 
+            
+            $this->session->set_flashdata('success', "Producto agregado a la lista de deseos correctamente.");
         }
 
-        redirect('marketPlace/index/');
-        // redirect('marketPlace/tienda/'. $producto['']);
+
+        redirect('producto/index/' . $product_id);
+    }
+    function eliminar_deseo($product_id)
+    {                  
+        if(isset($this->session->userdata['logged_in'])) {
+        
+            $params = array(                
+                'Productos_id' => $product_id,
+                'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+            );
+            
+            $producto_existente = $this->MarketPlace_model->verificar_producto_deseo($params);
+
+            if(isset($producto_existente)){
+                $this->MarketPlace_model->eliminar_deseo($params);
+            }
+            
+            $this->session->set_flashdata('success', "Producto eliminado del carrito correctamente.");
+        }
+
+        redirect('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']);
     }
 }
 

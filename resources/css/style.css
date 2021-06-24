@@ -126,7 +126,6 @@ a, img{
 	margin: 5px;
 	text-align: right;
 }
-
 .post_detail{
 	font-size: 14px;
     font-family: "Verdana";
@@ -156,8 +155,14 @@ a, img{
 #btn_save{
 	margin-bottom: 10px;
 }
-#btn_logout, #btn_return {
+#btn_logout {
 	position: absolute;
+	right: 0px;
+	top: 0px;
+	height: 30px;
+	width: 30px;
+}
+#btn_return {
 	right: 0px;
 	top: 0px;
 	height: 30px;
@@ -279,7 +284,27 @@ a, img{
 	font-size: 11px;
 	font-family: 'Arial';
 }
-
+.boton_x{
+	border: 0px;
+	background: #1DA1F2;
+	color: #FFF;
+	border-radius: 100%;
+	width: 26px;
+	cursor: pointer;
+	
+}
+#btn_buscar{
+	/* position: absolute; */
+	border: 0px;
+	height: 45px;
+	width: 45px;
+	background-image: url("../img/lupa.svg");
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size: 70%;
+	border-radius: 4px;
+	top: 30%;
+}
 .msg_box{
 	position: relative;
 	border: 1px solid #CCCCCC;

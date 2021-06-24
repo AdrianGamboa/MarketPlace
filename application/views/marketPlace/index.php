@@ -1,29 +1,41 @@
+<?php if (!empty($this->session)) { 
+		if($this->session->flashdata('error')){ echo "<div class='msg_box_user error' >" .  $this->session->flashdata('error') . "</div>"; } 
+		if($this->session->flashdata('success')){ echo "<div class='msg_box_user success' >" .  $this->session->flashdata('success') . "</div>"; } 
+} ?>
 <header>
     <div id="main_header" class="container-fluid">
         <div class="row">
             <div class="col">
                 <a href="<?php echo site_url('marketPlace/index'); ?>" >
                     <?php
-                        echo "<img class='logo' src='" . site_url('resources/img/logo1.svg') . "' alt='Foto de perfil' title='Foto de perfil' />";
+                        echo "<img class='logo' src='" . site_url('resources/img/logo1.svg') . "' alt='Foto de perfil' title='Foto de perfil' />";                        
                     ?>
                 </a>
             </div>
-            
-            <div class="input-group col busqueda" >
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="btnGroupAddon">
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>Categorias</option>
-                            <?php foreach ($categorias as $c) { 
-                                echo "<option value=". $c['nombre'] .">". $c['nombre'] ." </option>";
-                             } ?>
-                        </select>
+            <div class="col" style="margin-top: 40px;">
+                <?php echo form_open('marketPlace/buscar');?>
+                    <div class="input-group col busqueda" >
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">
+                                <select id="txt_categoria" name="txt_categoria" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option value="0" selected>Categorias</option>
+                                    <?php foreach ($categorias as $c) { 
+                                        echo "<option value=". $c['nombre'] .">". $c['nombre'] ." </option>";
+                                    } ?>
+                                </select>
+                                <select id="txt_tipo" name="txt_tipo" style="margin-left: 5px;" class="form-select form-select-sm" aria-label=".form-select-sm example">                                    
+                                    <option value="0" selected>Tipo</option>    
+                                    <option value="Tiendas">Tiendas</option>
+                                    <option value="Productos">Productos</option>                                    
+                                </select>
+                            </div>
+                        </div>                                    
+                        <input type="text" class="form-control" name="txt_buscar" id="txt_buscar" style="border: 0px;" placeholder="Buscar" title="Buscar">                                  
+                        <button id="btn_buscar" type="submit"></button>                                                            
                     </div>
-                </div>
-
-                <input type="text" class="form-control" name="txt_buscar" id="txt_buscar" placeholder="Buscar" title="Buscar">   
+                <?php echo form_close(); ?>
             </div>
-
+            
             <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE) { ?>
 
 				<div id="perfil_bar" class="col">
@@ -34,10 +46,11 @@
 					<?php 
 						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 />";
 					?>  
-
+                    <a href="<?php echo site_url('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']); ?>" >
 					<?php 
 						echo "<input class='perfil' type='image' src='" . site_url('resources/img/carrito.svg') . "' alt='Carrito de compras' title='Carrito de compras'  width=50 />";
-					?>  
+					?> 
+                    </a> 
 
 					<div class="perfil">
                         <a href="<?php echo site_url('user/edit/' . $this->session->userdata['logged_in']['users_id']); ?>" >
@@ -69,7 +82,7 @@
     <!-- Si es una tienda, se redirecciona al panel de administracion -->
     <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['tipo'] == "Tienda") { 
 
-        redirect('marketPlace/tienda/'.$this->session->userdata['logged_in']['users_id']); ?>
+        redirect('tienda/index/'.$this->session->userdata['logged_in']['users_id']); ?>
   
     <?php } else { ?>
         <h1 style="margin: 0px 20px 20px 20px">Tiendas</h1>
@@ -78,9 +91,9 @@
             <div class="row product_box">
                 <?php foreach ($tiendas as $t) { ?>                      
                     <div class="col">
-                        <a href="<?php echo site_url('marketPlace/tienda/' . $t['idUsuarios']); ?>" >
+                        <a href="<?php echo site_url('tienda/index/' . $t['idUsuarios']); ?>" >
                             <?php 
-                                echo "<input class='logo_pt' type='image' src='" . site_url('resources/photos/' . $t['foto_perfil']) . "' alt='Logo' width=200 height=120/>";
+                                echo "<input class='logo_pt' type='image' src='" . site_url('resources/photos/' . $t['foto_perfil']) . "' alt='Logo' max-width=270px height=200px/>";
                                 echo"<br>";
                                 echo "<label class='lbl_pt'>" . $t['nombre'] . "</label>";
                             ?>   
@@ -90,16 +103,31 @@
             </div>
         </div>
 
-    <h1 style="margin: 20px 20px 20px 20px">Productos destacados</h1>
+    <h1 style="margin: 20px 20px 20px 20px">Productos</h1>
     <div class="container-fluid">
         <div class="row product_box">
-            <div class="col">
-                <?php 
-                    echo "<input class='logo_pt' type='image' src='" . site_url('resources/img/logo.svg') . "' alt='Logo' width=200 height=120/>";
-                    echo"<br>";
-                    echo "<label class='lbl_pt'>a</label>";
-                ?>                
-            </div>
+            <?php 
+            if($productos !=null) {
+                foreach ($productos as $p) { 
+                    $foto = '';
+                    foreach ($fotos as $f) { 
+                        if($f['Productos_id'] == $p['idProductos']){
+                            $foto = $f['nombre'];
+                            break;
+                        }
+                    } ?>  
+                    
+                    <div class="col">
+                        <a href="<?php echo site_url('producto/index/'. $p['idProductos']); ?>" >
+                            <?php 
+                                echo "<input class='logo_pt' style='border-radius: 10px' type='image' src='" . site_url('resources/photos/products/' . $foto) . "' alt='Logo' max-width=270px height=200px/>";
+                                echo"<br>";
+                                echo "<label class='lbl_pt'>" . $p['nombre'] . "</label>";
+                            ?>   
+                        </a>
+                    </div>
+                <?php }             
+            }?>
         </div>
     </div>
     <?php } ?>

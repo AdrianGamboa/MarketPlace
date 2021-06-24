@@ -1,3 +1,7 @@
+<?php if (!empty($this->session)) { 
+		if($this->session->flashdata('error')){ echo "<div class='msg_box_user error' >" .  $this->session->flashdata('error') . "</div>"; } 
+		if($this->session->flashdata('success')){ echo "<div class='msg_box_user success' >" .  $this->session->flashdata('success') . "</div>"; } 
+} ?>
 <header>
     <div id="main_header" class="container-fluid">
         <div class="row">
@@ -67,76 +71,92 @@
 
 <body>
 <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['users_id'] == $producto['Usuarios_id']) { ?>
-        <?php echo form_open_multipart('marketPlace/editProduct/' . $producto['idProductos']); ?>
+        
             <div class="container-fluid">
-                <div class="row" id="insertar_producto">
-                    <div class="col" id="">
+                <div class="row">
+                    <div class="col" style="text-align: center;">
+                        <?php echo form_open('producto/editar_producto/' . $producto['idProductos']); ?>
+                        <h3>Datos del producto</h3>
                         <label for="txt_nombre" class="control-label"><span class="text-danger">* </span>Nombre:</label>
                         <div class="form-group">
                             <input type="text" name="txt_nombre" value="<?php echo ($this->input->post('txt_nombre') ? $this->input->post('txt_nombre') : $producto['nombre']); ?>" class="cajatexto" id="txt_nombre" />
                             <span class="text-danger"><?php echo form_error('txt_nombre');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_descripcion" class="control-label"><span class="text-danger">* </span>Descripcion:</label>
                         <div class="form-group">
                             <input type="text" name="txt_descripcion" value="<?php echo ($this->input->post('txt_descripcion') ? $this->input->post('txt_descripcion') : $producto['descripcion']); ?>" class="cajatexto" id="txt_descripcion" />
                             <span class="text-danger"><?php echo form_error('txt_descripcion');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_disponibles" class="control-label"><span class="text-danger">* </span>Disponibles:</label>
                         <div class="form-group">
                             <input type="number" name="txt_disponibles" value="<?php echo ($this->input->post('txt_disponibles') ? $this->input->post('txt_disponibles') : $producto['disponibles']); ?>" class="cajatexto" id="txt_disponibles" />
                             <span class="text-danger"><?php echo form_error('txt_disponibles');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_ubicacion" class="control-label "><span class="text-danger">* </span>Ubicacion:</label>
                         <div class="form-group">                        
                         <input type="text" name="txt_ubicacion" value="<?php echo ($this->input->post('txt_ubicacion') ? $this->input->post('txt_ubicacion') : $producto['ubicacion']); ?>" class="cajatexto" id="txt_ubicacion" />
                             <span class="text-danger"><?php echo form_error('txt_ubicacion');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_precio" class="control-label "><span class="text-danger">* </span>Precio:</label>
                         <div class="form-group">                        
                         <input type="number" name="txt_precio" value="<?php echo ($this->input->post('txt_precio') ? $this->input->post('txt_precio') : $producto['precio']); ?>" class="cajatexto" id="txt_precio" />
                             <span class="text-danger"><?php echo form_error('txt_precio');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_tiempo_envio" class="control-label "><span class="text-danger">* </span>Tiempo de envio (dias):</label>
                         <div class="form-group">                        
                         <input type="number" name="txt_tiempo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_tiempo_envio') : $producto['tiempo_envio']); ?>" class="cajatexto" id="txt_tiempo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_tiempo_envio');?></span>
                         </div>
-                    </div>
-                    <div class="col">
                         <label for="txt_costo_envio" class="control-label "><span class="text-danger">* </span>Costo del envio:</label>
                         <div class="form-group">                        
                         <input type="number" name="txt_costo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_costo_envio') : $producto['costo_envio']); ?>" class="cajatexto" id="txt_costo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_costo_envio');?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="box-footer" style="text-align: center;">
-                <button type="submit" class="boton">Editar producto</button>                
-            </div>
-        <?php echo form_close(); ?>
-        <div class="col" id="nombre_tienda">
-            <h1 style="margin: 20px 20px 20px 20px">Agregar imagenes del producto</h1>        
-        </div>
-        <div style="text-align: center; margin-top: 20px; border-bottom:black 4px solid ;">
-            <?php echo form_open_multipart('marketPlace/upload_photo/' . $producto['idProductos']);?>
-                <input type="file" name="txt_foto" size="20" class="btn btn-info" accept="image/jpeg,image/gif,image/png" />
-                <br><br>
-                <button type="submit" class="boton">Cargar Foto</button>
-            <?php echo form_close(); ?>
-        </div>
-        
+                        </div>   
+                        <button type="submit" class="boton" style="margin: 10px;">Editar producto</button>     
+                        <?php echo form_close(); ?> 
+
+                        <?php echo form_open('producto/eliminar_producto/' . $producto['idProductos']);?>                        
+                            <button type="submit" class="boton">Eliminar producto</button>    
+                        <?php echo form_close(); ?>          
+                   </div>  
+                     
+
+                    <div class="col" style="text-align: center;">
+                        
+                        <h3>Categorias del producto</h3>  
+                        
+                            <?php foreach ($categorias_producto as $c) {  
+                                echo form_open('producto/eliminar_categoria_producto/' . $producto['idProductos']);
+                                    echo "<label style='font-size: 20px;'>" . $c['nombre'] . "</label>"; 
+                                    echo "<input type='hidden' name='txt_categoria' value='". $c['idCategorias']. "'>";                                
+                                    echo "<button style='margin-left:10px;' type='submit' class='boton_x'>X</button><br>";
+                                echo form_close(); 
+                            } ?>
+                         
+                        <h3 style="margin: 0px 20px 20px 20px">Agregar categoría al producto</h3>  
+                        <?php echo form_open('producto/agregar_categoria_producto/' . $producto['idProductos']);?>                        
+                            <select id="txt_categoria" name="txt_categoria" class="form-select form-select-sm" aria-label=".form-select-sm example" style="width: 50%; display: inline; margin-top: 10px;">
+                                <option selected value="0">Seleccione una categoría</option>
+                                <?php foreach ($categorias as $c) {  
+                                    echo "<option value=". $c['idCategorias'] .">". $c['nombre'] ." </option>";
+                                } ?>                                
+                            </select> 
+                            <br>
+                            <br>
+                            <label>Categoría personalizada:</label> 
+                            <?php echo "<input id='txt_nueva_categoria' type='text' name='txt_nueva_categoria'><br><br>"; ?>
+                            <button type="submit" class="boton">Agregar categoría</button>
+                        <?php echo form_close(); ?>  
+
+                        <h3 style="margin: 20px 20px 20px 20px">Agregar imagenes del producto</h3>  
+                        <?php echo form_open_multipart('producto/upload_photo/' . $producto['idProductos']);?>
+                            <input type="file" name="txt_foto" size="20" class="form-control-file" accept="image/jpeg,image/gif,image/png" />
+                            <br><br>
+                            <button type="submit" class="boton">Cargar Foto</button>
+                        <?php echo form_close(); ?>       
+                    </div>  
+                </div>                    
+            </div>                      
     <?php } else { ?>
         <div class="container-fluid">
         
@@ -207,12 +227,37 @@
                 </div>     
             </div>
 
-            <div style="text-align: center; margin-top: 20px;">
-                <?php echo form_open_multipart('marketPlace/agregar_carrito/' . $producto['idProductos']);?>                   
-                    <button type="submit" class="boton">Agregar al carrito</button>
-                <?php echo form_close(); ?>
-            </div>
+            <?php if(isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE) { ?>
+                <div style="margin-top: 20px;">
+                    <div class="container-fluid">
+                        <?php echo form_open('marketPlace/agregar_carrito/' . $producto['idProductos']);?>     
+                            <div class="row">
+                                
+                                <div class="col" style="text-align: right; ">                   
+                                    <button type="submit" class="cajatexto">Agregar al carrito</button>                                    
+                                </div>
+                                <div class="col">
+                                    <input type="number" name="txt_cantidad" value=1 class="cajatexto" id="txt_cantidad" />
+                                </div>                                
+                            </div>
+                        <?php echo form_close(); ?>
+
+                        <div class="row" style="text-align: center;">
+                            <?php echo form_open('marketPlace/agregar_deseo/' . $producto['idProductos']);?>                   
+                                <button type="submit" class="cajatexto">Agregar a la lista de deseos</button>
+                            <?php echo form_close(); ?>
+                        </div>
+                        
+                    </div>
+                </div>
+            <?php } else { ?>
+                <div class="col" id="nombre_tienda">
+                 <h3 style="margin: 20px 20px 20px 20px" class="">Inicie sesión para comprar el producto</h3>
+                </div>                
+            <?php } ?>
+
         </div>
+            
         
     <?php } ?>
     <h1 style="margin: 20px 20px 20px 20px">Galeria de imagenes del producto</h1>            
@@ -221,7 +266,7 @@
                 <?php foreach ($fotos as $f) {  ?>
                     <div class="col" style="margin-bottom: 20px;"> 
                     <?php
-                        echo "<img class='logo_pt' style='border-radius: 10px' src='".site_url('resources/photos/products/' . $f['nombre']) . "' alt='Logo' width=250 height=200> ";                        
+                        echo "<img class='logo_pt' style='border-radius: 10px' src='".site_url('resources/photos/products/' . $f['nombre']) . "' alt='Logo' max-width=270px height=200px> ";                        
                     ?>
                     </div>
                 <?php } ?>  

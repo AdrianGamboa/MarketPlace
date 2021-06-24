@@ -1,3 +1,12 @@
+<?php if (!empty($this->session)) { 
+		if($this->session->flashdata('error')){ echo "<div class='msg_box_user error' >" .  $this->session->flashdata('error') . "</div>"; } 
+		if($this->session->flashdata('success')){ echo "<div class='msg_box_user success' >" .  $this->session->flashdata('success') . "</div>"; } 
+} ?>
+
+<head>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
 <header>
     <div id="main_header" class="container-fluid">
@@ -10,19 +19,23 @@
                 </a>
             </div>
             
-            <div class="input-group col busqueda" >
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="btnGroupAddon">
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>Categorias</option>
-                            <?php foreach ($categorias as $c) { 
-                                echo "<option value=". $c['nombre'] .">". $c['nombre'] ." </option>";
-                            } ?>
-                        </select>
+            <div class="col" style="margin-top: 40px;">
+                <?php echo form_open('tienda/buscar/' . $tienda['idUsuarios']);?>
+                    <div class="input-group col busqueda" >
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">
+                                <select id="txt_categoria" name="txt_categoria" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option value="0" selected>Categorias</option>
+                                    <?php foreach ($categorias as $c) { 
+                                        echo "<option value=". $c['nombre'] .">". $c['nombre'] ." </option>";
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>                                    
+                        <input type="text" class="form-control" name="txt_buscar" id="txt_buscar" style="border: 0px;" placeholder="Buscar" title="Buscar">                                  
+                        <button id="btn_buscar" type="submit"></button>                                                            
                     </div>
-                </div>
-
-                <input type="text" class="form-control" name="txt_buscar" id="txt_buscar" placeholder="Buscar" title="Buscar">   
+                <?php echo form_close(); ?>
             </div>
 
             <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE) { ?>
@@ -76,7 +89,9 @@
         </div>
         <div class="row" id="datos_principales">
             <div class="col" id="img_pr">
-                <?php echo "<img class='logo_pt' style='border-radius: 10px' src='". site_url('resources/photos/' . $tienda['foto_perfil']) ."' alt='Logo' width=200 height=120> ";?>
+                <a href="<?php echo site_url("tienda/index/" . $tienda['idUsuarios']) ?>">
+                    <?php echo "<img class='logo_pt' style='border-radius: 10px' src='". site_url('resources/photos/' . $tienda['foto_perfil']) ."' alt='Logo' width=200 height=120> ";?>
+                </a>
             </div>
             <div class="col">
                 <div class="row">
@@ -121,12 +136,80 @@
                         </div>
                     </div>
                 <?php } ?>
-                
             </div>     
+            <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['tipo'] == 'Cliente') { ?>
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col">
+                            <?php echo form_open('tienda/suscribirse/'. $tienda['idUsuarios']);?>                   
+                                <button type="submit" class="cajatexto" style="margin-top: 30px;">Suscribirse</button>
+                            <?php echo form_close(); ?>   
+                        </div>
+
+                        <div class="col">
+                            <button type="button" style="margin-top: 30px;" class="cajatexto" data-bs-toggle="modal" data-bs-target="#reportes_modal" id="btn_reportar">Reportar abuso</button> <!--Activa la ventana flotante-->      
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ventana flotante para reportar tienda-->
+                <div class="modal fade" id="reportes_modal" tabindex="-1" aria-labelledby="reportes_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reportes_modalLabel">Reportar abuso</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <?php echo form_open('tienda/reportar_abuso/'. $tienda['idUsuarios']);?>   
+
+                            <div class="modal-body">
+
+                                <label for="txt_descripcion" class="control-label "><span class="text-danger">* </span>Descripción del reporte:</label>
+                                <div class="form-group">                        
+                                    <input type="text" name="txt_descripcion" class="cajatexto" id="txt_descripcion" />
+                                    <span class="text-danger"><?php echo form_error('txt_descripcion');?></span>
+                                </div>
+                                
+                                <label for="txt_tipo_d" class="control-label "><span class="text-danger">* </span>Tipo de reporte:</label>
+                                <div class="form-group">  
+                                    <select id="txt_tipo_d" name="txt_tipo_d" class="cajatexto" aria-label=".form-select-sm example">
+                                        <option value="0" selected>Tipo de reporte</option>
+                                        <option value="Falta de información">Falta de información</option>                                        
+                                        <option value="Contenido inapropiado">Contenido inapropiado</option>                                        
+                                        <option value="Contenido diferente al del producto">Contenido diferente al del producto</option>
+                                        <option value="Contenido engañoso">Contenido engañoso</option>
+                                        <option value="Otro motivo">Otro motivo</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">                                            
+                                <button type="submit" class="btn btn-primary">Reportar abuso</button>                                
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>                                
+                            </div>
+
+                        <?php echo form_close(); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Script Js para hacer la animacion de la ventana emergente. -->
+                <script>
+                    var myModal = document.getElementById('reportes_modal')
+                    var myInput = document.getElementById('btn_reportar')
+
+                    myModal.addEventListener('shown.bs.modal', function () {
+                    myInput.focus()
+                    })
+                </script>
+                      
+            <?php } ?>            
         </div>
     </div>
     <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['users_id'] == $tienda['idUsuarios']) { ?>
-        <?php echo form_open_multipart('marketPlace/addProduct/' . $tienda['idUsuarios']); ?>
+        <?php echo form_open_multipart('tienda/agregar_producto/' . $tienda['idUsuarios']); ?>
             <div class="container-fluid">
                 <div class="row" id="insertar_producto">
                     <div class="col">
@@ -189,13 +272,65 @@
             </div>
             <br>
             <div class="box-footer" style="text-align: center;">
-                <button type="submit" class="boton">Agregar producto</button>                
+                <button type="submit" class="boton">Agregar producto</button>                        
             </div>
         <?php echo form_close(); ?>
+
+    <div style="text-align: center;">
+        <button type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#suscripciones_modal" id="btn_suscripciones">Ver suscripciones</button> <!--Activa la ventana flotante-->          
+    </div>
+
+    <div style="text-align: center; margin-top: 18px ;">
+        <button type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#deseos_modal">Ver usuarios con productos deseados</button> <!--Activa la ventana flotante-->  
+    </div>
+
+    <!-- Ventana flotante de usuarios suscritos -->
+    <div class="modal fade" id="suscripciones_modal" tabindex="-1" aria-labelledby="suscripciones_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="suscripciones_modalLabel">Suscripciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php foreach ($suscripciones as $s) { 
+                    echo "<div class='row'>";
+                    echo "<div class='col'> <label>".$s['nombre']."</label></div>";
+                    echo "<div class='col' style='text-align: right;'><label>".$s['email']."</label></div>";
+                    echo "</div>";
+                }?>            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventana flotante de usuarios con productos en la lista de deseos -->
+    <div class="modal fade" id="deseos_modal" tabindex="-1" aria-labelledby="deseos_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deseos_modalLabel">Usuarios con productos deseados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php foreach ($usuarios_deseos as $s) { 
+                    echo "<div class='row'>";
+                    echo "<div class='col'> <label>".$s['nombre']."</label></div>";
+                    echo "<div class='col' style='text-align: right;'><label>".$s['email']."</label></div>";
+                    echo "</div>";
+                }?>            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
+        </div>
+    </div>
     <?php } ?>
-    
-    
-    
+
     <h1 style="margin: 20px 20px 20px 20px">Productos</h1>            
     <div class="container-fluid">
         <div class="row product_box">
@@ -209,9 +344,9 @@
                 } ?>  
                  
                 <div class="col">
-                    <a href="<?php echo site_url('marketPlace/producto/'. $p['idProductos']); ?>" >
+                    <a href="<?php echo site_url('producto/index/'. $p['idProductos']); ?>" >
                         <?php 
-                            echo "<input class='logo_pt' style='border-radius: 10px' type='image' src='" . site_url('resources/photos/products/' . $foto) . "' alt='Logo' width=250 height=200/>";
+                            echo "<input class='logo_pt' style='border-radius: 10px' type='image' src='" . site_url('resources/photos/products/' . $foto) . "' alt='Logo' max-width=270px height=200px/>";
                             echo"<br>";
                             echo "<label class='lbl_pt'>" . $p['nombre'] . "</label>";
                         ?>   
