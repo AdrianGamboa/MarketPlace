@@ -117,4 +117,12 @@ class Tienda_model extends CI_Model
     {
         return $this->db->delete('suscripciones', $params);                
     }    
+
+    function promedio_calificacion_tienda($tienda) //Saca el promedio de calificacion de un producto
+    {
+        return $this->db->query("SELECT avg(calificaciones.calificacion) as calificacionT
+        FROM calificaciones INNER JOIN productos ON productos.idProductos = calificaciones.Productos_id 
+        INNER JOIN usuarios ON usuarios.idUsuarios = productos.Usuarios_id 
+        WHERE usuarios.idUsuarios =  " . $tienda)->row_array();
+    }
 }

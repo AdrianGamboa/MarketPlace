@@ -215,4 +215,23 @@ class MarketPlace_model extends CI_Model
         $this->db->where('idFormas_Pago', $metodo_id);
         return $this->db->update('formas_pago', $params);
     }
+
+    function add_calificacion($params) //Añade un nuevo producto a la lista de deseos del usuario
+    {
+        $this->db->insert('calificaciones', $params);
+        return $this->db->insert_id();
+    }
+
+    function verificar_calificacion($params) //Verifica si ya se ha dado la calificacion
+    {
+        return $this->db->query("SELECT calificaciones.idCalificaciones
+                                FROM calificaciones
+                                WHERE calificaciones.Usuarios_id = " . $params['Usuarios_id'] ." AND calificaciones.Productos_id = " . $params['Productos_id'])->row_array();
+    }
+
+    function update_calificacion($calificacion_id, $params) //Actualiza un producto
+    {
+        $this->db->where('idCalificaciones', $calificacion_id);
+        return $this->db->update('calificaciones', $params);
+    }
 }

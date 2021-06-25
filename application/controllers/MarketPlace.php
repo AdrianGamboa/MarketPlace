@@ -252,6 +252,39 @@ class MarketPlace extends CI_Controller
         redirect('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']);
     }
 
+    function agregar_calificacion($product_id)
+    {   
+        $this->load->library('form_validation'); 
+        $this->form_validation->set_rules('txt_calificacion','Calificacion','required');   
+        if(isset($this->session->userdata['logged_in'])) {
+            if($this->form_validation->run()&& $this->input->post('txt_calificacion') != '0')     
+            {  
+            $params = array(     
+                'calificacion'  => $this->input->post('txt_calificacion'),         
+                'Productos_id' => $product_id,
+                'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+            );
+            
+            $calificacion_existente = $this->MarketPlace_model->verificar_calificacion($params);
+            
+            if($calificacion_existente==NULL){
+                $this->MarketPlace_model->add_calificacion($params);
+                $this->session->set_flashdata('success', "La calificacion fue enviada correctamente");
+            }else{
+                $params = array(     
+                    'calificacion'  => $this->input->post('txt_calificacion'),         
+                );
+                $this->MarketPlace_model->update_calificacion($calificacion_existente['idCalificaciones'],$params);
+                $this->session->set_flashdata('success', "La calificacion fue modificada correctamente");
+            }
+      
+        }else{
+            $this->session->set_flashdata('error', "Asigne los parametros necesarios");
+        }
+        redirect('producto/index/' . $product_id);
+    }
+}
+
     function comprar_carrito(){
 
         $this->load->library('form_validation');

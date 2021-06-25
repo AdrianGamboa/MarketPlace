@@ -20,13 +20,16 @@ class Tienda extends CI_Controller
         }
 
         $data['categorias'] = $this->Tienda_model->get_all_categorias(); 
-        
+    
         $data['tienda'] = $this->Tienda_model->get_datos_tienda($tienda_id); 
         $data['redes'] = $this->Tienda_model->get_redes_tienda($tienda_id); 
         $data['fotos'] = $this->Tienda_model->get_all_fotos_productos(); 
         $data['suscripciones'] = $this->Tienda_model->get_suscripciones($tienda_id); 
         $data['usuarios_deseos'] = $this->Tienda_model->get_usuarios_deseos($tienda_id); 
-
+        $data['calificacion'] = $this->Tienda_model->promedio_calificacion_tienda($tienda_id);
+        if(!isset($data['calificacion']['calificacionT'])){
+            $data['calificacion']['calificacionT']=5;
+        }
         $data['_view'] = 'marketPlace/tienda';
         $this->load->view('layouts/main',$data);
     }

@@ -88,4 +88,11 @@ class Producto_model extends CI_Model
         $this->db->insert('fotografias', $params);
         return $this->db->insert_id();
     }
+
+    function promedio_calificacion_producto($producto) //Saca el promedio de calificacion de un producto
+    {
+        return $this->db->query("SELECT avg(calificaciones.calificacion) as calificacionP
+        FROM calificaciones
+        WHERE calificaciones.Productos_id = " . $producto)->row_array();
+    }
 }

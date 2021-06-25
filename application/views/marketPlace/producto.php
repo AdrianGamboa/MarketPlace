@@ -225,6 +225,14 @@
                         <div class="col">
                             <label for=""><?php echo $producto['precio'] ?></label>
                         </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col">
+                            <label for="" style="font-weight: bold;">Calificacion:  </label>
+                        </div>
+                        <div class="col">
+                            <label for=""><?php echo number_format($calificacion['calificacionP'],2)?> ⭐</label>
+                        </div>
                     </div>                       
                 </div>     
             </div>
@@ -248,7 +256,21 @@
                             <?php echo form_open('marketPlace/agregar_deseo/' . $producto['idProductos']);?>                   
                                 <button type="submit" class="cajatexto">Agregar a la lista de deseos</button>
                             <?php echo form_close(); ?>
+
+                            <?php echo form_open('marketPlace/agregar_calificacion/' . $producto['idProductos']);?>                   
+                                <select id="txt_calificacion" name="txt_calificacion" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option value="0" selected>Calificaciones</option>
+                                    <option value="1">⭐</option>
+                                    <option value="2">⭐⭐</option>
+                                    <option value="3">⭐⭐⭐</option> 
+                                    <option value="4">⭐⭐⭐⭐</option> 
+                                    <option value="5">⭐⭐⭐⭐⭐</option>                
+                                </select>
+                                <button type="submit" class="cajatexto">Calificar Producto</button>
+                            <?php echo form_close(); ?>
                         </div>
+
+                        
                         
                     </div>
                 </div>
@@ -262,6 +284,19 @@
             
         
     <?php } ?>
+    <h1 style="margin: 20px 20px 20px 20px">Comentarios</h1>            
+        <div class="container-fluid">
+            <div class="row product_box">
+                <?php foreach ($fotos as $f) {  ?>
+                    <div class="col" style="margin-bottom: 20px;"> 
+                    <?php
+                        echo "<img class='logo_pt' style='border-radius: 10px' src='".site_url('resources/photos/products/' . $f['nombre']) . "' alt='Logo' max-width=270px height=200px> ";                        
+                    ?>
+                    </div>
+                <?php } ?>  
+                    
+            </div>
+        </div>
     <h1 style="margin: 20px 20px 20px 20px">Galeria de imagenes del producto</h1>            
         <div class="container-fluid">
             <div class="row product_box">

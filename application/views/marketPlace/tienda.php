@@ -128,6 +128,14 @@
                         <label for=""><?php echo $tienda['email'] ?></label>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="" style="font-weight: bold;">Calificacion:</label>
+                    </div>
+                    <div class="col">
+                        <label for=""><?php echo number_format($calificacion['calificacionT'],2) ?> ⭐</label>
+                    </div>
+                </div>
                 <?php foreach ($redes as $r) { ?>      
                     <div class="row">
                         <div class="col">

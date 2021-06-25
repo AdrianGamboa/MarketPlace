@@ -364,3 +364,9 @@ a, img{
     to   { opacity: 1; visibility: visible; }
 }
 
+#txt_calificacion{
+	width: 10%;
+	display: inline-flex;
+	text-align: center;
+}
+

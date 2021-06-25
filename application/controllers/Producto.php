@@ -14,7 +14,7 @@ class Producto extends CI_Controller
         $data['categorias'] = $this->Producto_model->get_all_categorias(); 
         $data['categorias_producto'] = $this->Producto_model->get_categorias_producto($producto_id); 
         $data['fotos'] = $this->Producto_model->get_fotos_producto($producto_id);
-
+        $data['calificacion'] = $this->Producto_model->promedio_calificacion_producto($producto_id);
 
         $data['_view'] = 'marketPlace/producto';
         $this->load->view('layouts/main',$data);
