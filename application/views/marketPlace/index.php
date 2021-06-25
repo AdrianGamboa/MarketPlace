@@ -44,7 +44,8 @@
 					?> 
 
 					<?php 
-						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 />";
+						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 data-bs-toggle='modal' data-bs-target='#reportes_modal'/>";    
+                        
 					?>  
                     <a href="<?php echo site_url('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']); ?>" >
 					<?php 
@@ -131,6 +132,51 @@
         </div>
     </div>
     <?php } ?>
+     <!-- Ventana flotante para reportar tienda-->
+     <div class="modal fade" id="reportes_modal" tabindex="-1" aria-labelledby="reportes_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportes_modalLabel">Generar Reporte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <?php echo form_open('Reporte/ReporteProductos/');?>   
+
+                <div class="modal-body">
+
+                    <label for="txt_descripcion" class="control-label "><span class="text-danger">* </span>Seleccione una categoría:</label>
+                    <div class="form-group">                        
+                        <select id="txt_categorias_id" name="txt_categorias_id" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option value="0" selected>Categorias</option>
+                            <?php foreach ($categorias as $c) { 
+                                echo "<option value=". $c['idCategorias'] .">". $c['nombre'] ." </option>";
+                            } ?>
+                        </select>
+                        <input type="number" name="txt_rangoPrecio" class="cajatexto" id="txt_rangoPrecio" min='0'/>
+                        <input type="date" name="txt_rangoFecha1" class="cajatexto" id="txt_rangoFecha1"/>
+                        <input type="date" name="txt_rangoFecha2" class="cajatexto" id="txt_rangoFecha2"/>
+                        <span class="text-danger"><?php echo form_error('txt_descripcion');?></span>
+                    </div>
+                    
+                    <label for="txt_tipo_d" class="control-label "><span class="text-danger">* </span>Tipo de reporte:</label>
+                    <div class="form-group">  
+                        <select id="txt_tipo_d" name="txt_tipo_d" class="cajatexto" aria-label=".form-select-sm example">
+                            <option value="0" selected>Tipo de reporte</option>
+                            <option value="Productos más baratos">Productos más baratos</option>                                        
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">                                            
+                    <button type="submit" class="btn btn-primary">Generar Reporte</button>                                
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>                                
+                </div>
+
+            <?php echo form_close(); ?>
+            </div>
+        </div>
+    </div>
 </body>
 
 <footer class="text-center text-lg-start footer">
