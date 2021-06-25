@@ -46,39 +46,27 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 $pdf->AddPage();
 
 $sheading = <<<EOD
-    <h3>Reporte de Productos Baratos</h3>
+    <h3>Factura</h3>
+
 EOD;
 $pdf->writeHTMLCell(0,0,'','',$sheading,0,1,0,true,'C',true);
 $pdf->Ln(8);
 
-$table = '<table style="border:2px solid gray">';
-$table .= '<tr>
-            <th style="border:2px solid gray">Producto</th>
-            <th style="border:2px solid gray">Precio</th>
-            <th style="border:2px solid gray">Categoria</th>
-            <th style="border:2px solid gray">Tienda</th>
-            <th style="border:2px solid gray">Publicacion</th>
-            <th style="border:2px solid gray">ubicacion</th>
-            </tr>';
-foreach($producto as $obtenidos){
-    $table .= '<tr>
-                <td style="border:2px solid gray">'.$obtenidos['nombre'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['precio'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['categoria'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['tienda'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['fecha_publicacion'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['ubicacion'].'</td>
-                </tr>';
-
-}
-$table .= '</table>';
-$pdf->writeHTMLCell(0,0,'','',$table,0,1,0,true,'C',true);
+$html ='<h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>
+        <h4>'.$factura['tienda'].'</h4>';
+$pdf->writeHTML($html,true,false,false,false,'C');
 
 // ---------------------------------------------------------
 
+$pdf->lastPage();
+ob_end_clean();
 //Close and output PDF document
-ob_clean();
-$pdf->Output('ProductosBaratos.pdf', 'I');
+$pdf->Output('Suscripciones.pdf', 'I');
 
 //============================================================+
 // END OF FILE

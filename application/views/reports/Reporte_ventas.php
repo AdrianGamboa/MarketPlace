@@ -46,7 +46,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 $pdf->AddPage();
 
 $sheading = <<<EOD
-    <h3>Reporte de Productos Baratos</h3>
+    <h3>Reporte de Ventas</h3>
 EOD;
 $pdf->writeHTMLCell(0,0,'','',$sheading,0,1,0,true,'C',true);
 $pdf->Ln(8);
@@ -54,20 +54,20 @@ $pdf->Ln(8);
 $table = '<table style="border:2px solid gray">';
 $table .= '<tr>
             <th style="border:2px solid gray">Producto</th>
-            <th style="border:2px solid gray">Precio</th>
-            <th style="border:2px solid gray">Categoria</th>
-            <th style="border:2px solid gray">Tienda</th>
-            <th style="border:2px solid gray">Publicacion</th>
-            <th style="border:2px solid gray">ubicacion</th>
+            <th style="border:2px solid gray">Descripción</th>
+            <th style="border:2px solid gray">Unidades</th>
+            <th style="border:2px solid gray">Precio Unitario</th>
+            <th style="border:2px solid gray">Costo Envio</th>
+            <th style="border:2px solid gray">Total</th>
             </tr>';
-foreach($producto as $obtenidos){
+foreach($ventas as $obtenidos){
     $table .= '<tr>
                 <td style="border:2px solid gray">'.$obtenidos['nombre'].'</td>
+                <td style="border:2px solid gray">'.$obtenidos['descripcion'].'</td>
+                <td style="border:2px solid gray">'.$obtenidos['cantidad'].'</td>
                 <td style="border:2px solid gray">'.$obtenidos['precio'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['categoria'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['tienda'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['fecha_publicacion'].'</td>
-                <td style="border:2px solid gray">'.$obtenidos['ubicacion'].'</td>
+                <td style="border:2px solid gray">'.$obtenidos['costo_envio'].'</td>
+                <td style="border:2px solid gray">'.$obtenidos['total'].'</td>
                 </tr>';
 
 }
@@ -78,7 +78,7 @@ $pdf->writeHTMLCell(0,0,'','',$table,0,1,0,true,'C',true);
 
 //Close and output PDF document
 ob_clean();
-$pdf->Output('ProductosBaratos.pdf', 'I');
+$pdf->Output('Ventas.pdf', 'I');
 
 //============================================================+
 // END OF FILE
