@@ -30,12 +30,25 @@ class Reporte_model extends CI_Model
                                 WHERE suscripciones.cliente_id = " . $users_id . " AND productos_deseados.Usuarios_id = " . $users_id . "")->result_array();
     }
 
-    function get_factura(){
+    function get_facturaProductos($venta_id){
 
-        return $this->db->query("SELECT productos.nombre, productos.descripcion , productos.precio , productos.costo_envio, ,ventas_productos.cantidad, ((productos.precio * ventas_productos.cantidad) + productos.costo_envio) AS Total
+        return $this->db->query("SELECT productos.nombre, productos.descripcion , productos.precio , productos.costo_envio, ventas_productos.cantidad,
+                                ((productos.precio * ventas_productos.cantidad) + productos.costo_envio) AS total
                                 FROM productos
                                 INNER JOIN ventas_productos ON ventas_productos.Productos_id = productos.idProductos
-                                WHERE ventas_productos.Ventas_id = 1")->result_array();
+                                WHERE ventas_productos.Ventas_id = " . $venta_id . "")->result_array();
+    }
+    function get_facturaVenta($venta_id){
+
+        return $this->db->query("SELECT ventas.idVentas, ventas.fecha , ventas.venta_total,
+                                direcciones.pais, direcciones.provincia, direcciones.casillero, direcciones.postal, direcciones.observaciones,
+                                formas_pago.titular_tarjeta, formas_pago.numero_tarjeta,
+                                usuarios.nombre as usuario, usuarios.cedula
+                                FROM ventas
+                                INNER JOIN formas_pago ON formas_pago.idFormas_Pago = ventas.Formas_Pago_id
+                                INNER JOIN usuarios ON usuarios.idUsuarios = formas_pago.Usuarios_id
+                                INNER JOIN direcciones ON direcciones.idDirecciones = ventas.Direcciones_id
+                                WHERE ventas.idVentas = " . $venta_id . "")->row_array();
     }
 
     function get_productos_comprados($params){

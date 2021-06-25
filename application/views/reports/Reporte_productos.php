@@ -55,10 +55,10 @@ $table = '<table style="border:2px solid gray">';
 $table .= '<tr>
             <th style="border:2px solid gray">Producto</th>
             <th style="border:2px solid gray">Precio</th>
-            <th style="border:2px solid gray">Categoria</th>
+            <th style="border:2px solid gray">Categoría</th>
             <th style="border:2px solid gray">Tienda</th>
-            <th style="border:2px solid gray">Publicacion</th>
-            <th style="border:2px solid gray">ubicacion</th>
+            <th style="border:2px solid gray">Publicación</th>
+            <th style="border:2px solid gray">Ubicación</th>
             </tr>';
 foreach($producto as $obtenidos){
     $table .= '<tr>

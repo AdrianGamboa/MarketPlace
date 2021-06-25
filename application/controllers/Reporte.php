@@ -29,7 +29,14 @@ class Reporte extends CI_Controller{
 
       function ReporteFactura()
       {
-            # code...
+            $params = array(                
+                  'venta_id' => 1,    
+            );
+            
+            $data['producto'] = $this->Reporte_model->get_facturaProductos(4);
+            $data['venta'] = $this->Reporte_model->get_facturaVenta(4);
+            $data['_view'] = 'reports/Reporte_factura';
+            $this->load->view('layouts/main',$data);
       }
 
       function ReporteCompras(){
