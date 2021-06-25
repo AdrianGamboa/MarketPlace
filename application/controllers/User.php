@@ -185,31 +185,38 @@ class User extends CI_Controller{
     function agregar_metodo_pago()
     {   
         $data['user'] = $this->User_model->get_user($this->session->userdata['logged_in']['users_id']);
-
+        
+        
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('txt_numero_tarjeta','Url','required|max_length[128]');
-        $this->form_validation->set_rules('txt_codigo_cvv','Url','required|max_length[128]');
-        $this->form_validation->set_rules('txt_vencimiento','Url','required|max_length[128]');
+        $this->form_validation->set_rules('txt_numero_tarjeta','Numero de tarjeta','required|max_length[128]');
+        $this->form_validation->set_rules('txt_codigo_cvv','Codigo CVV','required|max_length[3]');
+        $this->form_validation->set_rules('txt_vencimiento','Vencimiento','required|max_length[128]');
 		
         
 		if($this->form_validation->run())     
         {   
-         
-            $params = array(
-                'titular_tarjeta' => $data['user']['nombre'],
-                'numero_tarjeta' => $this->input->post('txt_numero_tarjeta'),                
-                'codigo_cvv' => password_hash($this->input->post('txt_codigo_cvv'), PASSWORD_BCRYPT),             
-                'saldo' => 1000,
-                'vencimiento' => $this->input->post('txt_vencimiento'),
-                'Usuarios_id' =>  $data['user']['idUsuarios'],                    
-            );
-                    
-            $this->User_model->add_metodo_pago($params);
-            $this->session->set_flashdata('success', "Metodo de pago agregado correctamente"); 
+            $metodo_pago = $this->User_model->get_numero_tarjeta($this->input->post('txt_numero_tarjeta'));
+
+            if (!isset($metodo_pago)) {
+                $params = array(
+                    'titular_tarjeta' => $data['user']['nombre'],
+                    'numero_tarjeta' => $this->input->post('txt_numero_tarjeta'),                
+                    'codigo_cvv' => password_hash($this->input->post('txt_codigo_cvv'), PASSWORD_BCRYPT),             
+                    'saldo' => 1000,
+                    'vencimiento' => $this->input->post('txt_vencimiento'),
+                    'Usuarios_id' =>  $data['user']['idUsuarios'],                    
+                );
+                        
+                $this->User_model->add_metodo_pago($params);
+                $this->session->set_flashdata('success', "Metodo de pago agregado correctamente."); 
+            }
+            else{
+                $this->session->set_flashdata('error', "El numero de tarjeta proporcionado ya se encuentra registrado."); 
+            }
         }
         else
         {
-            $this->session->set_flashdata('error', "Proporcione los parametros necesarios para ingresar la red social."); 
+            $this->session->set_flashdata('error', "Proporcione los parametros necesarios para ingresar el metodo de pago."); 
         }
 
         redirect('user/edit/'.$this->session->userdata['logged_in']['users_id'],'refresh');

@@ -5,6 +5,7 @@ class MarketPlace extends CI_Controller
     {
         parent::__construct();
         $this->load->model('MarketPlace_model');
+        $this->load->model('User_model');
         $this->load->library('session');
     }
     function index($tiendas_data = array(),$productos_data = array())
@@ -12,11 +13,7 @@ class MarketPlace extends CI_Controller
         if($tiendas_data == null){ 
             $data['tiendas'] = $this->MarketPlace_model->get_all_tiendas(); 
 
-            $params = array(     //*           
-                'idUsuarios' => 1,//*
-            );//*
-
-            $data['productos'] = $this->MarketPlace_model->buscar_productos_tienda($params); //get productos destacados            
+            $data['productos'] = $this->MarketPlace_model->get_productos_destacados();
         } else { 
             $data['tiendas'] = $tiendas_data; 
             $data['productos'] = $productos_data;             
@@ -36,7 +33,15 @@ class MarketPlace extends CI_Controller
         $data['productos_deseos'] = $this->MarketPlace_model->get_deseos($usuario_id); 
         $data['categorias'] = $this->MarketPlace_model->get_all_categorias(); 
         $data['fotos'] = $this->MarketPlace_model->get_all_fotos_productos();
+        $data['metodos_pago'] = $this->User_model->get_metodos_pago_usuario($this->session->userdata['logged_in']['users_id']);
 
+
+        $precio_total = 0;
+        foreach($data['productos_carrito'] as $p){        
+            $precio_total += ($p['precio'] * $p['cantidad']) + $p['costo_envio'];
+        }
+        
+        $data['precio_total'] = $precio_total;
 
         $data['_view'] = 'marketPlace/carrito';
         $this->load->view('layouts/main',$data);
@@ -245,6 +250,123 @@ class MarketPlace extends CI_Controller
         }
 
         redirect('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']);
+    }
+
+    function comprar_carrito(){
+
+        $this->load->library('form_validation');
+        $this->load->helper('date');
+
+        $this->form_validation->set_rules('txt_num_tarjeta','Numero de tarjeta','required|max_length[128]');
+        $this->form_validation->set_rules('txt_codigo_cvv_pago','Codigo CVV','required|max_length[128]');
+        
+        $format = "%Y-%m-%d";
+
+        if($this->form_validation->run())     
+        {  
+            $data = array(
+				'numero_tarjeta' => $this->input->post('txt_num_tarjeta'),
+				'codigo_cvv' => $this->input->post('txt_codigo_cvv_pago')
+			);
+            
+            $result = $this->MarketPlace_model->verificar_tarjeta($data);
+            
+            if ($result == TRUE) { //Si el codigo cvv es correcto
+
+                $productos_carrito = $this->MarketPlace_model->get_carrito($this->session->userdata['logged_in']['users_id']); 
+                print_r($productos_carrito);
+                if ($productos_carrito != null) {
+                
+                    $tienda_inhabilitada = FALSE;
+                    $precio_total = 0;
+                    foreach($productos_carrito as $p){        
+                        $precio_total += ($p['precio'] * $p['cantidad']) + $p['costo_envio'];
+
+                        $tienda = $this->MarketPlace_model->get_tienda($p['Usuarios_id']); 
+                        if ($tienda['estado'] == 'Inactivo') {
+                            $tienda_inhabilitada = $tienda;
+                            break;
+                        }
+                    }
+
+                    if ($tienda_inhabilitada == FALSE) {
+
+                        $tarjeta = $this->MarketPlace_model->get_numero_tarjeta($this->input->post('txt_num_tarjeta'));                     
+
+                        if ( $tarjeta['saldo'] >= $precio_total) {     
+                            
+                            $cantidad_suficiente = TRUE; //Si hay suficientes productos en inventario para realizar la venta
+                            foreach($productos_carrito as $p) {  
+                                if ($p['disponibles'] < $p['cantidad']){
+                                    $cantidad_suficiente = FALSE;
+                                }
+                            }    
+                            
+                            if ($cantidad_suficiente == TRUE) {
+                                
+                                $data_venta = array(
+                                    'fecha' => mdate($format),
+                                    'venta_total' => $precio_total,
+                                    'Formas_Pago_id' => $tarjeta['idFormas_Pago'],
+                                );
+            
+                                $venta_id = $this->MarketPlace_model->add_venta($data_venta); 
+            
+                                foreach($productos_carrito as $p) {      
+            
+                                    $data_producto = array(
+                                        'disponibles' => $p['disponibles'] - $p['cantidad'],
+                                    ); 
+            
+                                    $this->MarketPlace_model->update_producto($p['idProductos'],$data_producto);
+            
+                                    $data_venta_producto = array(
+                                        'Ventas_id' => $venta_id,
+                                        'Productos_id' => $p['idProductos'],
+                                    );  
+            
+                                    $this->MarketPlace_model->add_venta_producto($data_venta_producto);
+            
+                                    $data_metodo_pago = array(
+                                        'saldo' => $tarjeta['saldo'] - $precio_total,                            
+                                    ); 
+            
+                                    $this->MarketPlace_model->update_metodo_pago($tarjeta['idFormas_Pago'], $data_metodo_pago);
+                                    
+                                    $data_carrito = array(
+                                        'idCarritos' => $p['idCarritos'],                            
+                                    ); 
+            
+                                    $this->MarketPlace_model->eliminar_carrito($data_carrito);
+                                }
+                                $this->session->set_flashdata('success', "Compra del producto realizada con exito.");    
+                            }
+                            else {
+                                $this->session->set_flashdata('error', "No hay suficientes productos a la venta."); 
+                            }                                            
+                        }
+                        else{
+                            $this->session->set_flashdata('error', "No cuenta con saldo suficiente en la tarjeta para realizar la transacción.");     
+                        }
+                    }
+                    else {
+                        $this->session->set_flashdata('error', "La tienda: " . $tienda_inhabilitada['nombre'] . " no tiene permitido vender productos.");     
+                    }
+                }
+                else {
+                    $this->session->set_flashdata('error', "No hay productos en el carrito para comprar."); 
+                }
+            }
+            else{
+                $this->session->set_flashdata('error', "El codigo CVV ingresado no concuerda con el numero de tarjeta."); 
+            }
+        }
+        else
+        {
+            $this->session->set_flashdata('error', "Proporcione los parametros necesarios para ingresar el metodo de pago."); 
+        }
+
+        redirect('marketPlace/carrito/'.$this->session->userdata['logged_in']['users_id'],'refresh');
     }
 }
 

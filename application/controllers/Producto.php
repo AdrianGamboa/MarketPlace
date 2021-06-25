@@ -96,7 +96,6 @@ class Producto extends CI_Controller
     function editar_producto($product_id) {
       
         $this->load->library('form_validation');
-        $this->load->helper('date');
 
         $this->form_validation->set_rules('txt_nombre','Nombre','required|max_length[128]');
         $this->form_validation->set_rules('txt_descripcion','Descripcion','required|max_length[128]');
