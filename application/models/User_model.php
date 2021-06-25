@@ -67,6 +67,11 @@ class User_model extends CI_Model
                                 FROM formas_pago                                 
                                 WHERE formas_pago.idFormas_Pago = " . $metodo_id)->row_array();
     }
+    function get_numero_tarjeta($num_tarjeta){ //Obtiene un metodo de pago dependiendo del numero de tarjeta
+        return $this->db->query("SELECT formas_pago.idFormas_Pago, formas_pago.titular_tarjeta, formas_pago.numero_tarjeta, formas_pago.codigo_cvv, formas_pago.saldo, formas_pago.vencimiento, formas_pago.Usuarios_id
+                                FROM formas_pago                                 
+                                WHERE formas_pago.numero_tarjeta = " . $num_tarjeta)->row_array();
+    }
     function get_direcciones_usuario($usuario_id){ //OBtiene todas las direcciones de envio del usuario especificado
         return $this->db->query("SELECT direcciones.idDirecciones, direcciones.pais, direcciones.provincia, direcciones.casillero, direcciones.postal, direcciones.observaciones, direcciones.Usuarios_id
                                 FROM direcciones                                 

@@ -72,8 +72,8 @@
 <body>
     <h1 style="margin: 0px 20px 20px 20px">Carrito de compras</h1>
         
-    <div class="container-fluid">
-        <div class="row product_box">
+    <div class="container-fluid product_box">
+        <div class="row ">
 
             <?php foreach ($productos_carrito as $p) {                          
                 $foto = '';
@@ -89,17 +89,26 @@
                         <?php 
                             echo "<input class='logo_pt' type='image' src='" . site_url('resources/photos/products/' . $foto) . "' alt='Logo' max-width=270px height=200px/>";
                             echo"<br>";
-                            echo "<label class=''>" . $p['nombre'] . "</label>";
-                            
+                            echo "<label>" . $p['nombre'] . "</label><br>";
+                            echo "<label>Precio: $" . number_format($p['precio']) . " x " . $p['cantidad'] . "</label><br>";                            
+                            echo "<label>Envio: $" . number_format($p['costo_envio']) . "</label>";                            
                         ?>   
                     </a>
                     <br>
-                    <?php echo form_open_multipart('marketPlace/eliminar_carrito/' . $p['idProductos']);?>
-                        <button type="submit" class="cajatexto" style="margin-bottom: 30px;">Eliminar</button>
+                    <?php echo form_open('marketPlace/eliminar_carrito/' . $p['idProductos']);?>
+                        <button type="submit" class="cajatexto">Eliminar</button>
                     <?php echo form_close(); ?>                    
                 </div>
             <?php } ?>
         </div>
+        <div class="row">    
+            <h3>Total: $<?php echo number_format($precio_total)?></h3>
+        </div>
+  
+            
+        <button type="button" class="cajatexto" data-bs-toggle="modal" data-bs-target="#compra_modal" id="btn_compra_modal">Comprar productos del carrito</button> <!--Activa la ventana flotante-->          
+        
+
     </div>
     <h1 style="margin: 20px 20px 20px 20px">Lista de deseos</h1>
         
@@ -120,7 +129,9 @@
                         <?php 
                             echo "<input class='logo_pt' type='image' src='" . site_url('resources/photos/products/' . $foto) . "' alt='Logo' max-width=270px height=200px/>";
                             echo"<br>";
-                            echo "<label class='lbl_pt'>" . $p['nombre'] . "</label>";
+                            echo "<label>" . $p['nombre'] . "</label><br>";
+                            echo "<label>Precio: $" . number_format($p['precio']) . "</label><br>";                            
+                            echo "<label>Envio: $" . number_format($p['costo_envio']) . "</label>";
                         ?>   
                     </a>
                     <br>
@@ -131,11 +142,43 @@
             <?php } ?>
         </div>
     </div>
+
+    <!-- Ventana flotante para realizar el pago de los productos -->
+    <div class="modal fade" id="compra_modal" tabindex="-1" aria-labelledby="compra_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="compra_modalLabel">Compra de los productos</h4>                
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <?php echo form_open('marketPlace/comprar_carrito/' . $p['idProductos']);?>
+                <div class="modal-body">                
+                    <div class="row">                    
+                        <label for="">Numero de tarjeta: </label>
+                        <select id="txt_num_tarjeta" name="txt_num_tarjeta" class="form-select-sm cajatexto" aria-label=".form-select-sm example" style="width: 50%; display: inline; margin: 10px 0px 10px 10px;">
+                            <option selected value="0">Seleccione la tarjeta a utilizar</option>	
+                            <?php foreach ($metodos_pago as $m) { ?>                                      
+                                <option value="<?php echo $m['numero_tarjeta'] ?>"><?php echo $m['numero_tarjeta'] ?></option>;
+                            <?php } ?>					                              
+                        </select> 
+                        <label for="">Codigo CVV: </label>
+                        <input type="text" name="txt_codigo_cvv_pago" class="cajatexto" id="txt_codigo_cvv_pago" style="width: 50%; margin: 10px 0px 10px 10px;"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="cajatexto"  style="margin-left: 0px;">Confirmar compra de los productos</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>                                                    
+                </div>
+                <?php echo form_close(); ?>  
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <footer class="text-center text-lg-start footer">
     <div class="text-center p-4">
         © 2021 Copyright:
-        <a class="text-reset fw-bold" href="https://github.com/AdrianGamboa/MarketPlace" target="_blank">Mosqueteros</a>
+        <a class="text-reset fw-bold" href="" target="_blank">Mosqueteros</a>
     </div>
 </footer>

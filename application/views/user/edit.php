@@ -155,10 +155,6 @@
 										<label class="lbls_"><?php echo $m['numero_tarjeta'] ?></label>
 									</div>
 									<div>
-										<label class="lbls_" style="font-weight: bold;">Codigo CVV: </label>
-										<label class="lbls_"><?php echo $m['codigo_cvv'] ?></label>
-									</div>
-									<div>
 										<label class="lbls_" style="font-weight: bold;">Saldo: </label>
 										<label class="lbls_"><?php echo $m['saldo'] ?></label>
 									</div>
@@ -204,7 +200,7 @@
 						<option value="4">Youtube</option>;						                              
 					</select> 
 
-					<br><label class="lbls_" for="txt_url_red">Url de la red:</label><br>
+					<br><label for="txt_url_red">Url de la red:</label><br>
 					<input type="text" name="txt_url_red" class="cajatexto"id="txt_url_red"/><br>			
 					<button type="submit" class="boton">Agregar red social</button>
 				<?php echo form_close(); ?>   
@@ -281,19 +277,19 @@
 				<?php echo form_open('user/agregar_metodo_pago/'); ?>
 					<div class="row">						
 						<div class="col">
-							<label class="lbls_" for="txt_numero_tarjeta">Numero de tarjeta:</label><br>
+							<label for="txt_numero_tarjeta">Numero de tarjeta:</label><br>
 							<input type="text" name="txt_numero_tarjeta" class="cajatexto" id="txt_numero_tarjeta" /><br>
 						</div>
 					</div>
 					<div class="row">						
 						<div class="col">
-							<label class="lbls_" for="txt_codigo_cvv">Código CVV:</label><br>
-							<input type="text" name="txt_codigo_cvv" class="cajatexto" id="txt_codigo_cvv" /><br>
+							<label for="txt_codigo_cvv">Código CVV:</label><br>
+							<input placeholder="3 Digitos" type="text" name="txt_codigo_cvv" class="cajatexto" id="txt_codigo_cvv" /><br>
 						</div>
 					</div>
 					<div class="row">						
 						<div class="col">
-							<label class="lbls_" for="txt_vencimiento">Vencimiento:</label><br>
+							<label for="txt_vencimiento">Vencimiento:</label><br>
 							<input type="date" name="txt_vencimiento" class="cajatexto" id="txt_vencimiento"/><br>
 						</div>
 					</div>

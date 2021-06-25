@@ -49,9 +49,11 @@
 						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 />";
 					?>  
 
-					<?php 
-						echo "<input class='perfil' type='image' src='" . site_url('resources/img/carrito.svg') . "' alt='Carrito de compras' title='Carrito de compras'  width=50 />";
-					?>  
+                    <a href="<?php echo site_url('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']); ?>" >
+                        <?php 
+                            echo "<input class='perfil' type='image' src='" . site_url('resources/img/carrito.svg') . "' alt='Carrito de compras' title='Carrito de compras'  width=50 />";
+                        ?> 
+                    </a> 
 
 					<div class="perfil">
                         <a href="<?php echo site_url('user/edit/' . $this->session->userdata['logged_in']['users_id']); ?>" >
@@ -360,6 +362,6 @@
 <footer class="text-center text-lg-start footer">
     <div class="text-center p-4">
         © 2021 Copyright:
-        <a class="text-reset fw-bold" href="https://github.com/AdrianGamboa/MarketPlace" target="_blank">Mosqueteros</a>
+        <a class="text-reset fw-bold" href="" target="_blank">Mosqueteros</a>
     </div>
 </footer>
