@@ -179,6 +179,6 @@
 <footer class="text-center text-lg-start footer">
     <div class="text-center p-4">
         © 2021 Copyright:
-        <a class="text-reset fw-bold" href="" target="_blank">Mosqueteros</a>
+        <a class="text-reset fw-bold" href="">Mosqueteros</a>
     </div>
 </footer>

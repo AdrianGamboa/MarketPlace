@@ -91,7 +91,7 @@
                         </div>
                         <label for="txt_disponibles" class="control-label"><span class="text-danger">* </span>Disponibles:</label>
                         <div class="form-group">
-                            <input type="number" name="txt_disponibles" value="<?php echo ($this->input->post('txt_disponibles') ? $this->input->post('txt_disponibles') : $producto['disponibles']); ?>" class="cajatexto" id="txt_disponibles" />
+                            <input type="number" min="1" name="txt_disponibles" value="<?php echo ($this->input->post('txt_disponibles') ? $this->input->post('txt_disponibles') : $producto['disponibles']); ?>" class="cajatexto" id="txt_disponibles" />
                             <span class="text-danger"><?php echo form_error('txt_disponibles');?></span>
                         </div>
                         <label for="txt_ubicacion" class="control-label "><span class="text-danger">* </span>Ubicacion:</label>
@@ -101,17 +101,17 @@
                         </div>
                         <label for="txt_precio" class="control-label "><span class="text-danger">* </span>Precio:</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_precio" value="<?php echo ($this->input->post('txt_precio') ? $this->input->post('txt_precio') : $producto['precio']); ?>" class="cajatexto" id="txt_precio" />
+                        <input type="number" min="1" name="txt_precio" value="<?php echo ($this->input->post('txt_precio') ? $this->input->post('txt_precio') : $producto['precio']); ?>" class="cajatexto" id="txt_precio" />
                             <span class="text-danger"><?php echo form_error('txt_precio');?></span>
                         </div>
                         <label for="txt_tiempo_envio" class="control-label "><span class="text-danger">* </span>Tiempo de envio (dias):</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_tiempo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_tiempo_envio') : $producto['tiempo_envio']); ?>" class="cajatexto" id="txt_tiempo_envio" />
+                        <input type="number" min="1" name="txt_tiempo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_tiempo_envio') : $producto['tiempo_envio']); ?>" class="cajatexto" id="txt_tiempo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_tiempo_envio');?></span>
                         </div>
                         <label for="txt_costo_envio" class="control-label "><span class="text-danger">* </span>Costo del envio:</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_costo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_costo_envio') : $producto['costo_envio']); ?>" class="cajatexto" id="txt_costo_envio" />
+                        <input type="number" min="1" name="txt_costo_envio" value="<?php echo ($this->input->post('txt_tiempo_envio') ? $this->input->post('txt_costo_envio') : $producto['costo_envio']); ?>" class="cajatexto" id="txt_costo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_costo_envio');?></span>
                         </div>   
                         <button type="submit" class="boton" style="margin: 10px;">Editar producto</button>     
@@ -239,7 +239,7 @@
                                     <button type="submit" class="cajatexto">Agregar al carrito</button>                                    
                                 </div>
                                 <div class="col">
-                                    <input type="number" name="txt_cantidad" value=1 class="cajatexto" id="txt_cantidad" />
+                                    <input type="number" min="1" name="txt_cantidad" value=1 class="cajatexto" id="txt_cantidad" />
                                 </div>                                
                             </div>
                         <?php echo form_close(); ?>
@@ -280,6 +280,6 @@
 <footer class="text-center text-lg-start footer">
     <div class="text-center p-4">
         © 2021 Copyright:
-        <a class="text-reset fw-bold" href="" target="_blank">Mosqueteros</a>
+        <a class="text-reset fw-bold" href="">Mosqueteros</a>
     </div>
 </footer>

@@ -274,7 +274,6 @@ class MarketPlace extends CI_Controller
             if ($result == TRUE) { //Si el codigo cvv es correcto
 
                 $productos_carrito = $this->MarketPlace_model->get_carrito($this->session->userdata['logged_in']['users_id']); 
-                print_r($productos_carrito);
                 if ($productos_carrito != null) {
                 
                     $tienda_inhabilitada = FALSE;
@@ -321,6 +320,7 @@ class MarketPlace extends CI_Controller
                                     $this->MarketPlace_model->update_producto($p['idProductos'],$data_producto);
             
                                     $data_venta_producto = array(
+                                        'cantidad' => $p['cantidad'],
                                         'Ventas_id' => $venta_id,
                                         'Productos_id' => $p['idProductos'],
                                     );  

@@ -150,17 +150,17 @@
                         </div>
 
                         <div class="col">
-                            <button type="button" style="margin-top: 30px;" class="cajatexto" data-bs-toggle="modal" data-bs-target="#reportes_modal" id="btn_reportar">Reportar abuso</button> <!--Activa la ventana flotante-->      
+                            <button type="button" style="margin-top: 30px;" class="cajatexto" data-bs-toggle="modal" data-bs-target="#denuncias_modal" id="btn_reportar">Reportar abuso</button> <!--Activa la ventana flotante-->      
                         </div>
                     </div>
                 </div>
 
                 <!-- Ventana flotante para reportar tienda-->
-                <div class="modal fade" id="reportes_modal" tabindex="-1" aria-labelledby="reportes_modalLabel" aria-hidden="true">
+                <div class="modal fade" id="denuncias_modal" tabindex="-1" aria-labelledby="denuncias_modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="reportes_modalLabel">Reportar abuso</h5>
+                            <h5 class="modal-title" id="denuncias_modalLabel">Reportar abuso</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <?php echo form_open('tienda/reportar_abuso/'. $tienda['idUsuarios']);?>   
@@ -196,17 +196,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Script Js para hacer la animacion de la ventana emergente. -->
-                <script>
-                    var myModal = document.getElementById('reportes_modal')
-                    var myInput = document.getElementById('btn_reportar')
-
-                    myModal.addEventListener('shown.bs.modal', function () {
-                    myInput.focus()
-                    })
-                </script>
-                      
             <?php } ?>            
         </div>
     </div>
@@ -231,7 +220,7 @@
                     <div class="col">
                         <label for="txt_disponibles" class="control-label "><span class="text-danger">* </span>Disponibles:</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_disponibles" value="<?php echo $this->input->post('txt_disponibles'); ?>" class="cajatexto" id="txt_disponibles" />
+                        <input type="number" min="1" name="txt_disponibles" value="<?php echo $this->input->post('txt_disponibles'); ?>" class="cajatexto" id="txt_disponibles" />
                             <span class="text-danger"><?php echo form_error('txt_disponibles');?></span>
                         </div>
                     </div>
@@ -245,21 +234,21 @@
                     <div class="col">
                         <label for="txt_precio" class="control-label "><span class="text-danger">* </span>Precio:</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_precio" value="<?php echo $this->input->post('txt_precio'); ?>" class="cajatexto" id="txt_precio" />
+                        <input type="number" min="1" name="txt_precio" value="<?php echo $this->input->post('txt_precio'); ?>" class="cajatexto" id="txt_precio" />
                             <span class="text-danger"><?php echo form_error('txt_precio');?></span>
                         </div>
                     </div>
                     <div class="col">
                         <label for="txt_tiempo_envio" class="control-label "><span class="text-danger">* </span>Tiempo de envio (dias):</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_tiempo_envio" value="<?php echo $this->input->post('txt_tiempo_envio'); ?>" class="cajatexto" id="txt_tiempo_envio" />
+                        <input type="number" min="1" name="txt_tiempo_envio" value="<?php echo $this->input->post('txt_tiempo_envio'); ?>" class="cajatexto" id="txt_tiempo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_tiempo_envio');?></span>
                         </div>
                     </div>
                     <div class="col">
                         <label for="txt_costo_envio" class="control-label "><span class="text-danger">* </span>Costo del envio:</label>
                         <div class="form-group">                        
-                        <input type="number" name="txt_costo_envio" value="<?php echo $this->input->post('txt_tiempo_envio'); ?>" class="cajatexto" id="txt_costo_envio" />
+                        <input type="number" min="1" name="txt_costo_envio" value="<?php echo $this->input->post('txt_tiempo_envio'); ?>" class="cajatexto" id="txt_costo_envio" />
                             <span class="text-danger"><?php echo form_error('txt_costo_envio');?></span>
                         </div>
                     </div>
@@ -362,6 +351,6 @@
 <footer class="text-center text-lg-start footer">
     <div class="text-center p-4">
         © 2021 Copyright:
-        <a class="text-reset fw-bold" href="" target="_blank">Mosqueteros</a>
+        <a class="text-reset fw-bold" href="">Mosqueteros</a>
     </div>
 </footer>

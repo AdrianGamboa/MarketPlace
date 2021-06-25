@@ -12,7 +12,7 @@ class MarketPlace_model extends CI_Model
                                 FROM ventas_productos
                                 INNER JOIN productos ON productos.idProductos = ventas_productos.Productos_id
                                 GROUP BY Productos_id 
-                                Having Count(*) > 1 order by 2 desc LIMIT 10")->result_array();
+                                Having Count(*) >= 1 order by 2 desc LIMIT 10")->result_array();
     }
     function get_all_tiendas() //Obtiene todas las tiendas
     {

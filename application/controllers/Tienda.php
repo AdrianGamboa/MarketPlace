@@ -90,10 +90,12 @@ class Tienda extends CI_Controller
             $usuario_suscrito = $this->Tienda_model->verificar_usuario_suscrito($params);            
 
             if(!isset($usuario_suscrito)) { //Si el usuario no estaba suscrito a la tienda, lo suscribe
-                $this->Tienda_model->add_suscripcion($params);                
+                $this->Tienda_model->add_suscripcion($params);  
+                $this->session->set_flashdata('success', "Se ha suscrito a la tienda correctamente.");
             }
             else { //Si el usuario ya estaba suscrito a la tienda, lo desuscribe
                 $this->Tienda_model->delete_suscripcion($params);                
+                $this->session->set_flashdata('success', "Se ha desuscrito de la tienda correctamente.");
             }                         
         }
         redirect('tienda/index/' . $tienda);
