@@ -17,7 +17,9 @@ class Producto extends CI_Controller
         $data['fotos'] = $this->Producto_model->get_fotos_producto($producto_id);
         $data['calificacion'] = $this->Producto_model->promedio_calificacion_producto($producto_id);
         $data['comentarios'] = $this->Producto_model->get_comentarios($producto_id);
-        
+        if(!isset($data['calificacion']['calificacionP'])){
+            $data['calificacion']['calificacionP']=5;
+        }
         $arr=array(); //Se llena el array con las respuestas de los comentarios de un producto        
         for ($i=0; $i<sizeof($data['comentarios']); $i++){
             array_push($arr,$this->Producto_model->get_comentarios_resp($data['comentarios'][$i]['idComentarios']));
