@@ -137,6 +137,7 @@ class User extends CI_Controller{
                 'casillero' => $this->input->post('txt_casillero'),                    
                 'postal' => $this->input->post('txt_postal'),                    
                 'observaciones' => $this->input->post('txt_observacion'),                    
+                'estado' => 'Activo',                    
                 'Usuarios_id' =>  $this->session->userdata['logged_in']['users_id'],                    
             );
                     
@@ -259,7 +260,12 @@ class User extends CI_Controller{
         $data['direccion'] = $this->User_model->get_direccion($direccion_id);
         
         if($this->session->userdata['logged_in']['users_id'] == $data['direccion']['Usuarios_id']) {   
-            $this->User_model->delete_direccion($direccion_id);
+
+            $params = array(
+                'estado' => 'Inactivo',                
+            );
+
+            $this->User_model->update_direccion($direccion_id,$params);
             $this->session->set_flashdata('success', "Dirección de envío eliminada correctamente.");
         }
                 

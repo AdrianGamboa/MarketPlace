@@ -18,7 +18,7 @@ class Reporte extends CI_Controller{
             $this->form_validation->set_rules('txt_rangoFecha1','Rango de fecha inicial','required');
             $this->form_validation->set_rules('txt_rangoFecha2','Rango de fecha final','required');
 
-            if($this->form_validation->run())
+            if($this->form_validation->run() && $this->input->post('txt_categorias_id') != "0")
             {
                   $params = array(                
                         'categorias_id' => $this->input->post('txt_categorias_id'),

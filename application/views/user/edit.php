@@ -81,26 +81,29 @@
 				</div>
 			</div>
 			
-			<div class="row" style="margin: 20px 0px 50px 0px;">
-				<div>			
-					<?php echo form_open('Reporte/ReporteSuscripciones/');?> 				
-						<button type='submit' class='boton'>Ver reporte de suscripciones</button><br>
-					<?php echo form_close();  ?>						
-					
-					<button id="btn_direccion_modal" type="button" class="boton" data-bs-toggle="modal" data-bs-target="#reporte_suscripciones_modal">Ver reporte de compras</button> <!--Activa la ventana flotante-->  															
-				</div>
-			</div>			
-
+			<?php if($user['tipo'] == "Cliente") { ?>
+				<div class="row" style="margin: 20px 0px 50px 0px;">
+					<div>			
+						<?php echo form_open('Reporte/ReporteSuscripciones/');?> 				
+							<button type='submit' class='boton'>Ver reporte de suscripciones</button><br>
+						<?php echo form_close();  ?>						
+						
+						<button id="btn_direccion_modal" type="button" class="boton" data-bs-toggle="modal" data-bs-target="#reporte_suscripciones_modal">Ver reporte de compras</button> <!--Activa la ventana flotante-->  															
+					</div>
+				</div>			
+			<?php }?>
 			<div class="row" style="margin: 20px 0px 20px 0px;">
 				<div class="col">
 					<button id="btn_red_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#red_modal">Agregar red social</button> <!--Activa la ventana flotante-->  										
 				</div>
-				<div class="col">
-					<button id="btn_direccion_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#direccion_modal">Agregar dirección de envío</button> <!--Activa la ventana flotante-->  										
-				</div>
-				<div class="col">
-					<button id="btn_metod_pago_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#metodo_pago_modal">Agregar método de pago</button> <!--Activa la ventana flotante-->  					
-				</div>
+				<?php if($user['tipo'] == "Cliente") { ?>
+					<div class="col">
+						<button id="btn_direccion_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#direccion_modal">Agregar dirección de envío</button> <!--Activa la ventana flotante-->  										
+					</div>
+					<div class="col">
+						<button id="btn_metod_pago_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#metodo_pago_modal">Agregar método de pago</button> <!--Activa la ventana flotante-->  					
+					</div>
+				<?php }?>
 			</div>			
 
 			<div class="row">
@@ -120,73 +123,74 @@
 						<?php } ?>
 					</div>
 				</div>
-
-				<div class="col">
-					<h3 class="lbls_">Direcciones de envio</h3>									
-					<div class="row">
-						<?php foreach ($direcciones as $d) { ?>      
-							<?php echo form_open('user/eliminar_direccion/' . $d['idDirecciones']); ?>
-								<div class="row">
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Pais: </label>
-										<label class="lbls_"><?php echo $d['pais'] ?></label>
+				<?php if($user['tipo'] == "Cliente") { ?>
+					<div class="col">
+						<h3 class="lbls_">Direcciones de envio</h3>									
+						<div class="row">
+							<?php foreach ($direcciones as $d) { ?>      
+								<?php echo form_open('user/eliminar_direccion/' . $d['idDirecciones']); ?>
+									<div class="row">
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Pais: </label>
+											<label class="lbls_"><?php echo $d['pais'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Provincia: </label>
+											<label class="lbls_"><?php echo $d['provincia'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Casillero: </label>
+											<label class="lbls_"><?php echo $d['casillero'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Código postal: </label>
+											<label class="lbls_"><?php echo $d['postal'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Observaciones: </label>
+											<label class="lbls_"><?php echo $d['observaciones'] ?></label>
+										</div>
+										<div>
+											<button style='margin: 10px 0px 0px 10px;' type='submit' class='boton'>Eliminar dirección</button><br>
+										</div>
 									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Provincia: </label>
-										<label class="lbls_"><?php echo $d['provincia'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Casillero: </label>
-										<label class="lbls_"><?php echo $d['casillero'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Código postal: </label>
-										<label class="lbls_"><?php echo $d['postal'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Observaciones: </label>
-										<label class="lbls_"><?php echo $d['observaciones'] ?></label>
-									</div>
-									<div>
-										<button style='margin: 10px 0px 0px 10px;' type='submit' class='boton'>Eliminar dirección</button><br>
-									</div>
-								</div>
-							<?php echo form_close();  ?>
-						<?php } ?>
-					</div>	
-				</div>
-				<div class="col">
-					<h3 class="lbls_">Formas de pago</h3>
-					<div class="row">
-						<?php foreach ($metodos_pago as $m) { ?>      
-							<?php echo form_open('user/eliminar_metodo_pago/' . $m['idFormas_Pago']); ?>
-								<div class="row">
-									
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Titular de la tarjeta: </label>
-										<label class="lbls_"><?php echo $m['titular_tarjeta'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Numero de la tarjeta: </label>
-										<label class="lbls_"><?php echo $m['numero_tarjeta'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Saldo: </label>
-										<label class="lbls_"><?php echo $m['saldo'] ?></label>
-									</div>
-									<div>
-										<label class="lbls_" style="font-weight: bold;">Vencimiento: </label>
-										<label class="lbls_"><?php echo $m['vencimiento'] ?></label>
-									</div>
-									<div>
-										<button style='margin: 10px 0px 0px 10px;' type='submit' class='boton'>Eliminar metodo de pago</button><br>
-									</div>
-									
-								</div>
-							<?php echo form_close();  ?>
-						<?php } ?>	
+								<?php echo form_close();  ?>
+							<?php } ?>
+						</div>	
 					</div>
-				</div>
+					<div class="col">
+						<h3 class="lbls_">Formas de pago</h3>
+						<div class="row">
+							<?php foreach ($metodos_pago as $m) { ?>      
+								<?php echo form_open('user/eliminar_metodo_pago/' . $m['idFormas_Pago']); ?>
+									<div class="row">
+										
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Titular de la tarjeta: </label>
+											<label class="lbls_"><?php echo $m['titular_tarjeta'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Numero de la tarjeta: </label>
+											<label class="lbls_"><?php echo $m['numero_tarjeta'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Saldo: </label>
+											<label class="lbls_"><?php echo $m['saldo'] ?></label>
+										</div>
+										<div>
+											<label class="lbls_" style="font-weight: bold;">Vencimiento: </label>
+											<label class="lbls_"><?php echo $m['vencimiento'] ?></label>
+										</div>
+										<div>
+											<button style='margin: 10px 0px 0px 10px;' type='submit' class='boton'>Eliminar metodo de pago</button><br>
+										</div>
+										
+									</div>
+								<?php echo form_close();  ?>
+							<?php } ?>	
+						</div>
+					</div>
+				<?php }?>
 			</div>
 					
 	        <div id="actions" style="margin-top: 20px;">

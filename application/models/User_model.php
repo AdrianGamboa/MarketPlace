@@ -8,7 +8,7 @@ class User_model extends CI_Model
 
     function get_user($users_id) //Obtiene los datos de un usuario según su id
     {
-        return $this->db->query("SELECT usuarios.idUsuarios , usuarios.email, usuarios.password, usuarios.nombre, usuarios.foto_perfil, usuarios.telefono, usuarios.pais, usuarios.provincia, usuarios.cedula from usuarios WHERE usuarios.idUsuarios = " . $users_id)->row_array();
+        return $this->db->query("SELECT usuarios.idUsuarios , usuarios.email, usuarios.password, usuarios.nombre, usuarios.foto_perfil, usuarios.telefono, usuarios.pais, usuarios.provincia, usuarios.cedula, usuarios.tipo from usuarios WHERE usuarios.idUsuarios = " . $users_id)->row_array();
     }
 
     function add_user($params) //Añade un nuevo usuario
@@ -48,14 +48,15 @@ class User_model extends CI_Model
     {
         return $this->db->delete('redes_sociales_usuarios', array('idRedesSociales_Usuarios' => $red_id));
     }
-    function delete_direccion($direccion_id)//Elimina una direccion de envio segun su id
-    {
-        return $this->db->delete('direcciones', array('idDirecciones' => $direccion_id));
-    }
     function update_metodo_pago($metodo_id,$params) //Elimina un metodo de pago segun su id
     {
         $this->db->where('idFormas_Pago', $metodo_id);
         return $this->db->update('formas_pago', $params);
+    }
+    function update_direccion($direccion_id,$params) //Elimina un metodo de pago segun su id
+    {
+        $this->db->where('idDirecciones', $direccion_id);
+        return $this->db->update('direcciones', $params);
     }
 
     function get_metodos_pago_usuario($usuario_id){ //Obtiene todos los metodos de pago del usuario especificado
@@ -76,7 +77,7 @@ class User_model extends CI_Model
     function get_direcciones_usuario($usuario_id){ //OBtiene todas las direcciones de envio del usuario especificado
         return $this->db->query("SELECT direcciones.idDirecciones, direcciones.pais, direcciones.provincia, direcciones.casillero, direcciones.postal, direcciones.observaciones, direcciones.Usuarios_id
                                 FROM direcciones                                 
-                                WHERE direcciones.Usuarios_id = " . $usuario_id)->result_array();
+                                WHERE direcciones.Usuarios_id = " . $usuario_id . " AND direcciones.estado = 'Activo'")->result_array();
     }
     function get_direccion($direccion_id) { //Obtiene una direccion de envio dependiendo del id
         return $this->db->query("SELECT direcciones.idDirecciones, direcciones.pais, direcciones.provincia, direcciones.casillero, direcciones.postal, direcciones.observaciones, direcciones.Usuarios_id
