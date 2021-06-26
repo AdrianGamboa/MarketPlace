@@ -72,26 +72,40 @@
 						<div class="form-group">
 							<input type="password" name="txt_clave" value="<?php echo $this->input->post('txt_clave'); ?>" class="cajatexto" id="txt_clave" />
 							<span class="text-danger"><?php echo form_error('txt_clave');?></span>
-						</div>
-						
-						<br><br>
-
+						</div>						
+						<br>
 						<div class="box-footer">
 							<button type="submit" class="boton">Guardar</button>
 						</div>
 					<?php echo form_close(); ?>
 				</div>
-				<div class="col">
-					<div style="margin-bottom: 20px">
-						<button id="btn_red_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#red_modal">Agregar red social</button> <!--Activa la ventana flotante-->  
-					</div>
-					<div style="margin-bottom: 20px">
-						<button id="btn_direccion_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#direccion_modal">Agregar dirección de envío</button> <!--Activa la ventana flotante-->  
-					</div>
-					<div style="margin-bottom: 20px">
-						<button id="btn_metod_pago_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#metodo_pago_modal">Agregar método de pago</button> <!--Activa la ventana flotante-->  
-					</div>
+			</div>
+			
+			<div class="row" style="margin: 20px 0px 50px 0px;">
+				<div>			
+					<?php $attributes = array('target' => '_blank');
+					echo form_open('Reporte/ReporteSuscripciones/',$attributes);?> 				
+						<button type='submit' class='boton'>Ver reporte de suscripciones</button><br>
+					<?php echo form_close();  ?>						
+					
+					<button id="btn_direccion_modal" type="button" class="boton" data-bs-toggle="modal" data-bs-target="#reporte_suscripciones_modal">Ver reporte de compras</button> <!--Activa la ventana flotante-->  															
+				</div>
+			</div>			
 
+			<div class="row" style="margin: 20px 0px 20px 0px;">
+				<div class="col">
+					<button id="btn_red_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#red_modal">Agregar red social</button> <!--Activa la ventana flotante-->  										
+				</div>
+				<div class="col">
+					<button id="btn_direccion_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#direccion_modal">Agregar dirección de envío</button> <!--Activa la ventana flotante-->  										
+				</div>
+				<div class="col">
+					<button id="btn_metod_pago_modal" type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#metodo_pago_modal">Agregar método de pago</button> <!--Activa la ventana flotante-->  					
+				</div>
+			</div>			
+
+			<div class="row">
+				<div class="col">
 					<h3 class="lbls_">Redes sociales</h3>
 					<div class="row">					
 						<?php foreach ($redes as $r) { ?>      
@@ -106,7 +120,9 @@
 							<?php echo form_close();  ?>
 						<?php } ?>
 					</div>
+				</div>
 
+				<div class="col">
 					<h3 class="lbls_">Direcciones de envio</h3>									
 					<div class="row">
 						<?php foreach ($direcciones as $d) { ?>      
@@ -138,8 +154,9 @@
 								</div>
 							<?php echo form_close();  ?>
 						<?php } ?>
-					</div>					
-
+					</div>	
+				</div>
+				<div class="col">
 					<h3 class="lbls_">Formas de pago</h3>
 					<div class="row">
 						<?php foreach ($metodos_pago as $m) { ?>      
@@ -172,8 +189,8 @@
 					</div>
 				</div>
 			</div>
-			
-	        <div id="actions">
+					
+	        <div id="actions" style="margin-top: 20px;">
 				<a href="<?php echo site_url('auth/logout'); ?>" id="btn_salir" name="btn_salir" title="Salir" style="margin-right: 20px;">🚪 Cerrar sesión</a>  		
 			  	<br>
               	<a href="<?php echo site_url('user/delete/' . $user['idUsuarios']); ?>" id="btn_eliminar" name="btn_eliminar"  style="margin-right: 20px;" title="Eliminar" >🗙 Eliminar mi cuenta</a>
@@ -277,14 +294,20 @@
 				<?php echo form_open('user/agregar_metodo_pago/'); ?>
 					<div class="row">						
 						<div class="col">
+							<label for="txt_titular_tarjeta">Titular de tarjeta:</label><br>
+							<input type="text" name="txt_titular_tarjeta" class="cajatexto" id="txt_titular_tarjeta" maxlength="50"/><br>
+						</div>
+					</div>
+					<div class="row">						
+						<div class="col">
 							<label for="txt_numero_tarjeta">Numero de tarjeta:</label><br>
-							<input type="text" name="txt_numero_tarjeta" class="cajatexto" id="txt_numero_tarjeta" /><br>
+							<input maxlength="16" type="number" name="txt_numero_tarjeta" class="cajatexto" id="txt_numero_tarjeta" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" /><br>
 						</div>
 					</div>
 					<div class="row">						
 						<div class="col">
 							<label for="txt_codigo_cvv">Código CVV:</label><br>
-							<input placeholder="3 Digitos" type="text" name="txt_codigo_cvv" class="cajatexto" id="txt_codigo_cvv" /><br>
+							<input placeholder="3 Digitos" maxlength="3"  type="number" name="txt_codigo_cvv" class="cajatexto" id="txt_codigo_cvv" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" /><br>
 						</div>
 					</div>
 					<div class="row">						
@@ -302,6 +325,37 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- Ventana flotante para reporte de compras-->
+    <div class="modal fade" id="reporte_suscripciones_modal" tabindex="-1" aria-labelledby="reporte_suscripciones_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reporte_suscripciones_modalLabel">Generar reporte de ventas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <?php $attributes = array('target' => '_blank');
+            echo form_open('Reporte/ReporteCompras/',$attributes);?>   
+
+                <div class="modal-body">                    
+                    <div class="form-group">                        
+                        <label for="txt_rangoFecha1">Fecha inicial:</label>
+                        <input type="date" name="txt_rangoFecha1" class="cajatexto" id="txt_rangoFecha1"/>
+                        <label for="txt_rangoFecha2">Fecha final:</label>
+                        <input type="date" name="txt_rangoFecha2" class="cajatexto" id="txt_rangoFecha2"/>
+                    </div>
+                </div>
+
+                <div class="modal-footer">                                            
+                    <button type="submit" class="btn btn-primary">Generar Reporte</button>                                
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>                                
+                </div>
+
+            <?php echo form_close(); ?>
             </div>
         </div>
     </div>

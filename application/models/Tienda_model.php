@@ -92,7 +92,7 @@ class Tienda_model extends CI_Model
                                 ORDER BY productos.nombre ASC")->result_array();
 
     }
-
+    //Actualiza el estado de la tienda a inactivo, prohibiendole vender productos
     function deshabilita_tienda($tienda,$params){
         $this->db->where('idUsuarios', $tienda);
         return $this->db->update('usuarios', $params);

@@ -42,7 +42,7 @@ class User_model extends CI_Model
 
     function delete_user($users_id) //Elimina un usuario segun su id
     {
-        return $this->db->delete('users', array('users_id' => $users_id));
+        return $this->db->delete('usuarios', array('idUsuarios' => $users_id));
     }
     function delete_red($red_id) //Elimina una rede social segun su id
     {

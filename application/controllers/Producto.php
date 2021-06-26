@@ -17,13 +17,13 @@ class Producto extends CI_Controller
         $data['fotos'] = $this->Producto_model->get_fotos_producto($producto_id);
         $data['calificacion'] = $this->Producto_model->promedio_calificacion_producto($producto_id);
         $data['comentarios'] = $this->Producto_model->get_comentarios($producto_id);
-        $arr=array();
-        //Se llena el array con las respuestas de los comentarios de un producto
+        
+        $arr=array(); //Se llena el array con las respuestas de los comentarios de un producto        
         for ($i=0; $i<sizeof($data['comentarios']); $i++){
             array_push($arr,$this->Producto_model->get_comentarios_resp($data['comentarios'][$i]['idComentarios']));
         }
+
         $data['respuestas']=$arr;
-        print_r($data['respuestas']);
         $data['_view'] = 'marketPlace/producto';
         $this->load->view('layouts/main',$data);
     }
@@ -151,6 +151,7 @@ class Producto extends CI_Controller
 
         $data['user'] = $this->Producto_model->get_datos_producto($product_id); 
         
+        //Verifica que el producto pertenezca al mismo usuario que el que tiene la sesión iniciada en la página
         if(isset($data['user']) && $this->session->userdata['logged_in']['users_id'] == $data['user']['Usuarios_id']) {
 
             $params = array(                
@@ -208,7 +209,6 @@ class Producto extends CI_Controller
         {
             $error = array('error' => $this->upload->display_errors());
             $this->session->set_flashdata('error', $error['error']);
-
         }
         else
         {

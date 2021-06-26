@@ -21,9 +21,6 @@ Class Auth extends CI_Controller {
     {
     	//Precarga todos los datos con los que la vista debe iniciar
     	$this->load->model('MarketPlace_model');
-        //$data['tweets'] = $this->Twitter_model->get_all_tweets();
-		//$data['user_likes'] = $this->Twitter_model->get_all_interactions('Like');
-        //$data['user_dislikes'] = $this->Twitter_model->get_all_interactions('Dislike');
         $data['_view'] = $view;
 		$this->load->view('layouts/main',$data);
     }

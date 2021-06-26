@@ -154,6 +154,13 @@
                 <?php echo form_open('marketPlace/comprar_carrito/' . $p['idProductos']);?>
                 <div class="modal-body">                
                     <div class="row">                    
+                        <label for="">Dirección de envío: </label>
+                        <select id="txt_direccion" name="txt_direccion" class="form-select-sm cajatexto" aria-label=".form-select-sm example" style="width: 50%; display: inline; margin: 10px 0px 10px 10px;">
+                            <option selected value="0">Seleccione la dirección a utilizar</option>	
+                            <?php foreach ($direcciones as $d) { ?>      
+                                <option value="<?php echo $d['idDirecciones'] ?>"><?php echo $d['pais'] . ", " . $d['provincia'] . ", " . $d['casillero'] ?></option>;
+                            <?php } ?>				                              
+                        </select> 
                         <label for="">Numero de tarjeta: </label>
                         <select id="txt_num_tarjeta" name="txt_num_tarjeta" class="form-select-sm cajatexto" aria-label=".form-select-sm example" style="width: 50%; display: inline; margin: 10px 0px 10px 10px;">
                             <option selected value="0">Seleccione la tarjeta a utilizar</option>	

@@ -276,7 +276,8 @@
         <?php echo form_close(); ?>
 
     <div style="text-align: center;">
-        <button type="button" class=" boton" data-bs-toggle="modal" data-bs-target="#suscripciones_modal" id="btn_suscripciones">Ver suscripciones</button> <!--Activa la ventana flotante-->          
+        <button type="button" class="boton" data-bs-toggle="modal" data-bs-target="#suscripciones_modal" id="btn_suscripciones">Ver suscripciones</button> <!--Activa la ventana flotante-->          
+        <button type="button" class="boton" data-bs-toggle="modal" data-bs-target="#reporte_venta_modal" id="btn_suscripciones">Ver reporte de ventas</button> <!--Activa la ventana flotante-->          
     </div>
 
     <div style="text-align: center; margin-top: 18px ;">
@@ -317,7 +318,7 @@
             <div class="modal-body">
                 <?php foreach ($usuarios_deseos as $s) { 
                     echo "<div class='row'>";
-                    echo "<div class='col'> <label>".$s['nombre']."</label></div>";
+                    echo "<div class='col'><label>".$s['nombre']."</label></div>";
                     echo "<div class='col' style='text-align: right;'><label>".$s['email']."</label></div>";
                     echo "</div>";
                 }?>            
@@ -352,6 +353,37 @@
                     </a>
                 </div>
             <?php } ?>
+        </div>
+    </div>
+
+    <!-- Ventana flotante para reporte de ventas-->
+    <div class="modal fade" id="reporte_venta_modal" tabindex="-1" aria-labelledby="reporte_venta_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reporte_venta_modalLabel">Generar reporte de ventas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <?php $attributes = array('target' => '_blank');
+            echo form_open('Reporte/ReporteVentas/',$attributes);?>   
+
+                <div class="modal-body">                    
+                    <div class="form-group">                        
+                        <label for="txt_rangoFecha1">Fecha inicial:</label>
+                        <input type="date" name="txt_rangoFecha1" class="cajatexto"/>
+                        <label for="txt_rangoFecha2">Fecha final:</label>
+                        <input type="date" name="txt_rangoFecha2" class="cajatexto"/>
+                    </div>
+                </div>
+
+                <div class="modal-footer">                                            
+                    <button type="submit" class="btn btn-primary">Generar Reporte</button>                                
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>                                
+                </div>
+
+            <?php echo form_close(); ?>
+            </div>
         </div>
     </div>
 </body>

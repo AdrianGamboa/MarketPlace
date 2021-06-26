@@ -27,9 +27,11 @@ class Tienda extends CI_Controller
         $data['suscripciones'] = $this->Tienda_model->get_suscripciones($tienda_id); 
         $data['usuarios_deseos'] = $this->Tienda_model->get_usuarios_deseos($tienda_id); 
         $data['calificacion'] = $this->Tienda_model->promedio_calificacion_tienda($tienda_id);
+
         if(!isset($data['calificacion']['calificacionT'])){
             $data['calificacion']['calificacionT']=5;
         }
+
         $data['_view'] = 'marketPlace/tienda';
         $this->load->view('layouts/main',$data);
     }
@@ -111,7 +113,7 @@ class Tienda extends CI_Controller
 
         if($this->form_validation->run())     
         {
-            if ( $this->input->post('txt_tipo_d') != '0' ) {
+            if ( $this->input->post('txt_tipo_d') != '0' ) { //Que se haya seleccionado una opcion del combo box de tipo de denuncia
                 if(isset($this->session->userdata['logged_in'])) {
                     
                     $params = array(                
@@ -121,7 +123,7 @@ class Tienda extends CI_Controller
                         'tienda_id' => $tienda,                
                     );
 
-                    $denuncia = $this->Tienda_model->verifica_denuncia($params);            
+                    $denuncia = $this->Tienda_model->verifica_denuncia($params); //Verifica si ya existen denuncias por parte de este usuario a esta tienda.
         
                     if(!isset($denuncia)) { //Si el usuario aun no habia denunciado a esta tienda, establece la denuncia
                         $this->Tienda_model->add_denuncia($params);   
@@ -131,8 +133,9 @@ class Tienda extends CI_Controller
                         $this->session->set_flashdata('success', "Ya se ha reportado a esta tienda anteriormente.");
                     }                         
 
+                    //Realiza el conteo de denuncias de la tienda
                     $cantidad_denuncias = $this->Tienda_model->verifica_cantidad_denuncias($tienda);                      
-                    if ($cantidad_denuncias['COUNT(denuncias.idDenuncias)'] >= 10) {
+                    if ($cantidad_denuncias['COUNT(denuncias.idDenuncias)'] == 10) {
                         
                         $params = array(                
                             'estado' => 'Inactivo',                            
@@ -150,37 +153,37 @@ class Tienda extends CI_Controller
             $this->index($tienda);           
         }        
     }
-    function buscar($tienda){
+    function buscar($tienda){ //Buscar productos dentro de la tienda
         if($this->input->post('txt_categoria') != '0') //Si quiere buscar productos por categoria
         {
-            $categoria = $this->MarketPlace_model->get_categoria($this->input->post('txt_categoria'));
+            $categoria = $this->MarketPlace_model->get_categoria($this->input->post('txt_categoria')); //Obtiene los datos de la categoria seleccionada
 
-            $productos = $this->Tienda_model->buscar_productos_categoria($tienda,$this->input->post('txt_buscar'), $categoria);
+            $productos = $this->Tienda_model->buscar_productos_categoria($tienda,$this->input->post('txt_buscar'), $categoria); //Busca los productos que pertenezcan a esa categoria y que coincidan con el parametro de busqueda si especifico
             
-            if($productos != null) {
+            if($productos != null) { //Si se encontraron productos, se cargan los datos en el view
                 $this->index($tienda,$productos);  
             }
-            else {
+            else { //Si no se encontraron productos.
                 $this->session->set_flashdata('error', "No se encontraron productos.");
                 redirect('tienda/index/'.$tienda,'refresh');
                 $this->index($tienda);    
             }  
         }
-        else {
+        else { //Si no se selecciono una categoria como parametro de busqueda
             if($this->input->post('txt_buscar') != null) {
 
-                $productos = $this->Tienda_model->buscar_productos($tienda,$this->input->post('txt_buscar'));
+                $productos = $this->Tienda_model->buscar_productos($tienda,$this->input->post('txt_buscar')); //Se buscan los productos tomando en cuenta el parametro de busqueda por nombre
 
-                if($productos != null){
+                if($productos != null){ //Si se encontraron productos, se cargan los datos en el view
                     $this->index($tienda,$productos);
                 }
-                else{                        
+                else{     //Si no se encontraron productos.                   
                     $this->session->set_flashdata('error', "No se encontraron productos.");
                     redirect('tienda/index/'.$tienda,'refresh');
                     $this->index($tienda);    
                 }                    
             }
-            else{
+            else{//Si no se especifico ningun parametro de busqueda
                 $this->session->set_flashdata('error', "Digite parámetros de búsqueda.");
                 redirect('tienda/index/'.$tienda,'refresh');
                 $this->index($tienda);    

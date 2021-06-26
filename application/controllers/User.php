@@ -186,20 +186,19 @@ class User extends CI_Controller{
     {   
         $data['user'] = $this->User_model->get_user($this->session->userdata['logged_in']['users_id']);
         
-        
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('txt_numero_tarjeta','Numero de tarjeta','required|max_length[128]');
+        $this->form_validation->set_rules('txt_titular_tarjeta','Titular de tarjeta','required|max_length[50]');
+        $this->form_validation->set_rules('txt_numero_tarjeta','Numero de tarjeta','required|max_length[16]');
         $this->form_validation->set_rules('txt_codigo_cvv','Codigo CVV','required|max_length[3]');
-        $this->form_validation->set_rules('txt_vencimiento','Vencimiento','required|max_length[128]');
+        $this->form_validation->set_rules('txt_vencimiento','Vencimiento','required');
 		
-        
 		if($this->form_validation->run())     
         {   
-            $metodo_pago = $this->User_model->get_numero_tarjeta($this->input->post('txt_numero_tarjeta'));
+            $metodo_pago = $this->User_model->get_numero_tarjeta($this->input->post('txt_numero_tarjeta')); //Verifica si existe el numero de tarjeta
 
-            if (!isset($metodo_pago)) {
+            if (!isset($metodo_pago)) { //Si no existe, se agrega
                 $params = array(
-                    'titular_tarjeta' => $data['user']['nombre'],
+                    'titular_tarjeta' => $this->input->post('txt_titular_tarjeta'),
                     'numero_tarjeta' => $this->input->post('txt_numero_tarjeta'),                
                     'codigo_cvv' => password_hash($this->input->post('txt_codigo_cvv'), PASSWORD_BCRYPT),             
                     'saldo' => 1000,
