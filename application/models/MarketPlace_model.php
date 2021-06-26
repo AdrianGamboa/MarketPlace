@@ -216,7 +216,7 @@ class MarketPlace_model extends CI_Model
         return $this->db->update('formas_pago', $params);
     }
 
-    function add_calificacion($params) //Añade un nuevo producto a la lista de deseos del usuario
+    function add_calificacion($params) //Añade una calificacion
     {
         $this->db->insert('calificaciones', $params);
         return $this->db->insert_id();
@@ -233,5 +233,11 @@ class MarketPlace_model extends CI_Model
     {
         $this->db->where('idCalificaciones', $calificacion_id);
         return $this->db->update('calificaciones', $params);
+    }
+
+    function add_comentario($params) //Añade un nuevo comentario al producto
+    {
+        $this->db->insert('comentarios', $params);
+        return $this->db->insert_id();
     }
 }

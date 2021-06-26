@@ -95,4 +95,29 @@ class Producto_model extends CI_Model
         FROM calificaciones
         WHERE calificaciones.Productos_id = " . $producto)->row_array();
     }
+
+    function get_comentarios($id_producto){//Retorna los comentarios de un producto
+        return $this->db->query("SELECT usuarios.nombre, comentarios.idComentarios , comentarios.descripcion, comentarios.Comentarios_id
+        FROM comentarios 
+        INNER JOIN usuarios ON usuarios.idUsuarios = comentarios.Usuarios_id
+        INNER JOIN productos ON productos.idProductos = comentarios.Productos_id
+        WHERE comentarios.Productos_id = $id_producto
+        ORDER BY comentarios.idComentarios DESC")->result_array();
+    }
+    function get_comentarios_resp($id_comentario){//Retorna la respuesta de un comentario
+        return $this->db->query("SELECT usuarios.nombre, comentarios.descripcion, comentarios.idComentarios
+        FROM comentarios 
+        INNER JOIN usuarios ON usuarios.idUsuarios = comentarios.Usuarios_id
+        INNER JOIN productos ON productos.idProductos = comentarios.Productos_id
+        WHERE comentarios.idComentarios = ( SELECT comentarios.Comentarios_id
+                                            FROM comentarios 
+                                            INNER JOIN usuarios ON usuarios.idUsuarios = comentarios.Usuarios_id
+                                            INNER JOIN productos ON productos.idProductos = comentarios.Productos_id
+                                            WHERE comentarios.idComentarios = $id_comentario)")->row_array();
+    }
+    function update_comentarios($id_comentario, $params) //Actualiza un comentario
+    {
+        $this->db->where('idComentarios', $id_comentario);
+        return $this->db->update('comentarios', $params);
+    }
 }

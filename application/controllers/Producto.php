@@ -5,6 +5,7 @@ class Producto extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Producto_model');
+        $this->load->model('MarketPlace_model');
         $this->load->library('session');
     }
     function index($producto_id)
@@ -15,7 +16,14 @@ class Producto extends CI_Controller
         $data['categorias_producto'] = $this->Producto_model->get_categorias_producto($producto_id); 
         $data['fotos'] = $this->Producto_model->get_fotos_producto($producto_id);
         $data['calificacion'] = $this->Producto_model->promedio_calificacion_producto($producto_id);
-
+        $data['comentarios'] = $this->Producto_model->get_comentarios($producto_id);
+        $arr=array();
+        //Se llena el array con las respuestas de los comentarios de un producto
+        for ($i=0; $i<sizeof($data['comentarios']); $i++){
+            array_push($arr,$this->Producto_model->get_comentarios_resp($data['comentarios'][$i]['idComentarios']));
+        }
+        $data['respuestas']=$arr;
+        print_r($data['respuestas']);
         $data['_view'] = 'marketPlace/producto';
         $this->load->view('layouts/main',$data);
     }
@@ -155,6 +163,31 @@ class Producto extends CI_Controller
         }
 
         redirect('marketPlace/index/');
+    }
+    //Se agrega un respuesta 
+    function agregar_comentario_respuesta($product_id, $comentario)
+    {   
+        $this->load->library('form_validation'); 
+        $this->form_validation->set_rules('text_respuesta','Respuesta','required');   
+        if(isset($this->session->userdata['logged_in'])) {
+            if($this->form_validation->run())     
+            {  
+                $params = array(     
+                    'descripcion'  => $this->input->post('text_respuesta'),         
+                    'Productos_id' => $product_id,
+                    'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+                );
+                $variable = $this->MarketPlace_model->add_comentario($params);
+                $respuesta = array(     
+                    'Comentarios_id' => $variable
+                );
+                $this->Producto_model->update_comentarios($comentario, $respuesta);
+                $this->session->set_flashdata('success', "El cometario fue enviado correctamente");
+            }else{
+                $this->session->set_flashdata('error', "Asigne los parametros necesarios");
+            }
+        redirect('producto/index/' . $product_id);
+        }
     }
 
     //Permite cargar una nueva imagen al servidor, la imagen se renombra con el id del producto al que pertenece junto con el numero de fotos que tiene

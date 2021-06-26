@@ -284,19 +284,54 @@
             
         
     <?php } ?>
-    <h1 style="margin: 20px 20px 20px 20px">Comentarios</h1>            
-        <div class="container-fluid">
-            <div class="row product_box">
-                <?php foreach ($fotos as $f) {  ?>
-                    <div class="col" style="margin-bottom: 20px;"> 
-                    <?php
-                        echo "<img class='logo_pt' style='border-radius: 10px' src='".site_url('resources/photos/products/' . $f['nombre']) . "' alt='Logo' max-width=270px height=200px> ";                        
-                    ?>
-                    </div>
-                <?php } ?>  
-                    
+    <h1 style="margin: 20px 20px 20px 20px">Comentarios</h1> 
+        <div class="row product_box">
+            <div class = "container_comments">
+                <?php foreach ($comentarios as $c) {  ?>
+                    <?php for($i=0; $i<sizeof($respuestas);$i++){?>
+                        <?php if($respuestas[$i]!=NULL) {?>
+                            <?php if($respuestas[$i]['idComentarios']==$c['Comentarios_id']) {?>
+                                <div class="comentarios">
+                                <?php if($c['Comentarios_id']==NULL) {?> 
+                                    <h5><?php echo "Publicado por ".$c['nombre'];?></h5>
+                                    <div style="margin-bottom:20px">
+                                        <?php echo $c['descripcion']; ?>
+                                    </div>
+                            <?php }
+                            }
+                        }
+                    }?> 
+                    <?php for($i=0; $i<sizeof($respuestas);$i++){?>
+                        <?php if($respuestas[$i]!=NULL) {?>
+                            <?php if($respuestas[$i]['idComentarios']==$c['Comentarios_id']) {?>
+                                <div>
+                                    <h5><?php echo "Respuesta: "?></h5>
+                                    <h5><?php echo "Publicado por ".$respuestas[$i]['nombre'];?></h5>
+                                    <div style="margin-bottom:20px">
+                                    <?php echo $respuestas[$i]['descripcion']; ?>
+                                </div>
+                            </div>
+                        <?php }}}?> 
+                        
+                    <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['users_id'] == $producto['Usuarios_id']){?>
+                        <?php echo form_open('Producto/agregar_comentario_respuesta/' . $producto['idProductos'] .'/'. $c['idComentarios']);?>
+                            <textarea class="form-control" id="text_respuesta" name="text_respuesta" rows="2"></textarea>
+                            <button type="submit" class="cajatexto">Responder</button>
+                        <?php echo form_close();?>
+                        <?php } ?>
+                    </div>  
+                <?php } ?>
+                         
             </div>
-        </div>
+        <div class="form-group escribirComentario">
+        <?php echo form_open('marketPlace/agregar_comentario/' . $producto['idProductos']);?>
+        <?php if (isset($this->session->userdata['logged_in']['logged_in']) && $this->session->userdata['logged_in']['logged_in'] == TRUE && $this->session->userdata['logged_in']['users_id'] != $producto['Usuarios_id']){?>               
+            <textarea class="form-control" id="text_comentario" name="text_comentario"  rows="3"></textarea>
+            <button type="submit" class="cajatexto">Comentar</button>
+            <?php } ?>
+        <?php echo form_close();?>
+        </div>  
+        </div> 
     <h1 style="margin: 20px 20px 20px 20px">Galeria de imagenes del producto</h1>            
         <div class="container-fluid">
             <div class="row product_box">

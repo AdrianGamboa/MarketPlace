@@ -251,7 +251,7 @@ class MarketPlace extends CI_Controller
 
         redirect('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']);
     }
-
+    //Se agrega la calificacion al producto
     function agregar_calificacion($product_id)
     {   
         $this->load->library('form_validation'); 
@@ -284,6 +284,27 @@ class MarketPlace extends CI_Controller
         redirect('producto/index/' . $product_id);
     }
 }
+    //Se agregar un comentario al producto, ya se de un nuevo comentario o de respuesta
+    function agregar_comentario($product_id)
+    {   
+        $this->load->library('form_validation'); 
+        $this->form_validation->set_rules('text_comentario','Comentario','required');   
+        if(isset($this->session->userdata['logged_in'])) {
+            if($this->form_validation->run())     
+            {  
+                $params = array(     
+                    'descripcion'  => $this->input->post('text_comentario'),         
+                    'Productos_id' => $product_id,
+                    'Usuarios_id' => $this->session->userdata['logged_in']['users_id'],
+                );
+                    $this->MarketPlace_model->add_comentario($params);
+                    $this->session->set_flashdata('success', "El cometario fue enviado correctamente");
+            }else{
+                $this->session->set_flashdata('error', "Asigne los parametros necesarios");
+            }
+        redirect('producto/index/' . $product_id);
+        }
+    }
 
     function comprar_carrito(){
 
