@@ -52,15 +52,16 @@ class User_model extends CI_Model
     {
         return $this->db->delete('direcciones', array('idDirecciones' => $direccion_id));
     }
-    function delete_metodo_pago($metodo_id) //Elimina un metodo de pago segun su id
+    function update_metodo_pago($metodo_id,$params) //Elimina un metodo de pago segun su id
     {
-        return $this->db->delete('formas_pago', array('idFormas_Pago' => $metodo_id));
+        $this->db->where('idFormas_Pago', $metodo_id);
+        return $this->db->update('formas_pago', $params);
     }
 
     function get_metodos_pago_usuario($usuario_id){ //Obtiene todos los metodos de pago del usuario especificado
         return $this->db->query("SELECT formas_pago.idFormas_Pago, formas_pago.titular_tarjeta, formas_pago.numero_tarjeta, formas_pago.codigo_cvv, formas_pago.saldo, formas_pago.vencimiento, formas_pago.Usuarios_id
                                 FROM formas_pago                                 
-                                WHERE formas_pago.Usuarios_id = " . $usuario_id)->result_array();
+                                WHERE formas_pago.Usuarios_id = " . $usuario_id . " AND formas_pago.estado = 'Activo' ")->result_array();
     }
     function get_metodo_pago($metodo_id){ //Obtienen un metodo de pago dependiendo del id
         return $this->db->query("SELECT formas_pago.idFormas_Pago, formas_pago.titular_tarjeta, formas_pago.numero_tarjeta, formas_pago.codigo_cvv, formas_pago.saldo, formas_pago.vencimiento, formas_pago.Usuarios_id

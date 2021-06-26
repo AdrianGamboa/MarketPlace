@@ -202,6 +202,7 @@ class User extends CI_Controller{
                     'numero_tarjeta' => $this->input->post('txt_numero_tarjeta'),                
                     'codigo_cvv' => password_hash($this->input->post('txt_codigo_cvv'), PASSWORD_BCRYPT),             
                     'saldo' => 1000,
+                    'estado' => 'Activo',
                     'vencimiento' => $this->input->post('txt_vencimiento'),
                     'Usuarios_id' =>  $data['user']['idUsuarios'],                    
                 );
@@ -239,8 +240,13 @@ class User extends CI_Controller{
     {   
         $data['metodo_pago'] = $this->User_model->get_metodo_pago($metodo_pago_id);
         
-        if($this->session->userdata['logged_in']['users_id'] == $data['metodo_pago']['Usuarios_id']) {   
-            $this->User_model->delete_metodo_pago($metodo_pago_id);
+        if($this->session->userdata['logged_in']['users_id'] == $data['metodo_pago']['Usuarios_id']) {  
+            
+            $params = array(
+                'estado' => 'Inactivo',                
+            );
+
+            $this->User_model->update_metodo_pago($metodo_pago_id,$params);
             $this->session->set_flashdata('success', "Metodo de pago eliminado correctamente.");
         }
                 

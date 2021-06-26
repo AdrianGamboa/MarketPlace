@@ -6,6 +6,7 @@ class Tienda extends CI_Controller
         parent::__construct();
         $this->load->model('Tienda_model');
         $this->load->model('MarketPlace_model');
+        $this->load->model('Producto_model');
         $this->load->library('session');
     }
 

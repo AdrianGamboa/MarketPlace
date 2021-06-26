@@ -44,9 +44,9 @@
 					?> 
 
 					<?php 
-						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 data-bs-toggle='modal' data-bs-target='#reportes_modal'/>";    
-                        
+						echo "<input class='perfil' type='image' src='" . site_url('resources/img/icon_reporte.svg') . "' alt='Reportes' title='Reportes' width=50 data-bs-toggle='modal' data-bs-target='#reportes_modal'/>";                            
 					?>  
+
                     <a href="<?php echo site_url('marketPlace/carrito/' . $this->session->userdata['logged_in']['users_id']); ?>" >
                         <?php 
                             echo "<input class='perfil' type='image' src='" . site_url('resources/img/carrito.svg') . "' alt='Carrito de compras' title='Carrito de compras'  width=50 />";
@@ -132,16 +132,15 @@
         </div>
     </div>
     <?php } ?>
-     <!-- Ventana flotante para reporte -->
-     <div class="modal fade" id="reportes_modal" tabindex="-1" aria-labelledby="reportes_modalLabel" aria-hidden="true">
+    <!-- Ventana flotante para reporte -->
+    <div class="modal fade" id="reportes_modal" tabindex="-1" aria-labelledby="reportes_modalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reportes_modalLabel">Generar Reporte</h5>
+                <h5 class="modal-title" id="reportes_modalLabel">Generar reporte de productos baratos</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <?php $attributes = array('target' => '_blank');
-                echo form_open('Reporte/ReporteProductos/', $attributes);?>   
+            <?php echo form_open('Reporte/ReporteProductos/');?>   
                 <div class="modal-body">
                     <label for="txt_descripcion" class="control-label "><span class="text-danger">* </span>Seleccione una categoría:</label>
                     <div class="form-group">                        

@@ -83,8 +83,7 @@
 			
 			<div class="row" style="margin: 20px 0px 50px 0px;">
 				<div>			
-					<?php $attributes = array('target' => '_blank');
-					echo form_open('Reporte/ReporteSuscripciones/',$attributes);?> 				
+					<?php echo form_open('Reporte/ReporteSuscripciones/');?> 				
 						<button type='submit' class='boton'>Ver reporte de suscripciones</button><br>
 					<?php echo form_close();  ?>						
 					
@@ -334,12 +333,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reporte_suscripciones_modalLabel">Generar reporte de ventas</h5>
+                <h5 class="modal-title" id="reporte_suscripciones_modalLabel">Generar reporte de compras</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <?php $attributes = array('target' => '_blank');
-            echo form_open('Reporte/ReporteCompras/',$attributes);?>   
+            <?php echo form_open('Reporte/ReporteCompras/');?>   
 
                 <div class="modal-body">                    
                     <div class="form-group">                        
