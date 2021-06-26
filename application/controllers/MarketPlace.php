@@ -421,7 +421,7 @@ class MarketPlace extends CI_Controller
                                 }
                                 
                                 //Abre el reporte de factura que se genera al realizar la compra
-                                ?> <script>window.open('http://localhost/MarketPlace/Reporte/ReporteFactura/'+ <?php echo $venta_id ?>,'_blank').focus();</script> <?php
+                                redirect('Reporte/ReporteFactura/'. $venta_id);
 
                                 $this->session->set_flashdata('success', "Compra del producto realizada con exito.");    
 
