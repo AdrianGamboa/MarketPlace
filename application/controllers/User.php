@@ -68,7 +68,6 @@ class User extends CI_Controller{
         if(isset($data['user']['idUsuarios']) && $this->session->userdata['logged_in']['users_id'] == $data['user']['idUsuarios'])
         {
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('txt_clave','Contraseña','required|max_length[128]');
             $this->form_validation->set_rules('txt_nombre','Nombre','required|max_length[64]');
             $this->form_validation->set_rules('txt_correo','Correo','required|max_length[64]');
             $this->form_validation->set_rules('txt_cedula','Cedula','required|max_length[64]');
@@ -80,7 +79,6 @@ class User extends CI_Controller{
             {   
                 $params = array(
                     'email' => $this->input->post('txt_correo'),
-                    'password' => password_hash($this->input->post('txt_clave'), PASSWORD_BCRYPT),
                     'nombre' => $this->input->post('txt_nombre'),
                     'cedula' => $this->input->post('txt_cedula'),
                     'telefono' => $this->input->post('txt_telefono'),

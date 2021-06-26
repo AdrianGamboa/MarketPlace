@@ -67,12 +67,7 @@
 							<input type="text" name="txt_provincia" value="<?php echo ($this->input->post('txt_provincia') ? $this->input->post('txt_provincia') : $user['provincia']); ?>" class="cajatexto" id="txt_provincia" />
 							<span class="text-danger"><?php echo form_error('txt_provincia');?></span>
 						</div>
-
-						<label for="txt_clave" class="control-label lbls_"><span class="text-danger">* </span>Contraseña:</label>
-						<div class="form-group">
-							<input type="password" name="txt_clave" value="<?php echo $this->input->post('txt_clave'); ?>" class="cajatexto" id="txt_clave" />
-							<span class="text-danger"><?php echo form_error('txt_clave');?></span>
-						</div>						
+						
 						<br>
 						<div class="box-footer">
 							<button type="submit" class="boton">Guardar</button>
